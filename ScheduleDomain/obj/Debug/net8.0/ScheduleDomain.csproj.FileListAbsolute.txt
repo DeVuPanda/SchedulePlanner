@@ -1,0 +1,13 @@
+C:\Projects\univ_practice\src\SchedulePlanner\ScheduleDomain\bin\Debug\net8.0\ScheduleDomain.deps.json
+C:\Projects\univ_practice\src\SchedulePlanner\ScheduleDomain\bin\Debug\net8.0\ScheduleDomain.dll
+C:\Projects\univ_practice\src\SchedulePlanner\ScheduleDomain\bin\Debug\net8.0\ScheduleDomain.pdb
+C:\Projects\univ_practice\src\SchedulePlanner\ScheduleDomain\obj\Debug\net8.0\ScheduleDomain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Projects\univ_practice\src\SchedulePlanner\ScheduleDomain\obj\Debug\net8.0\ScheduleDomain.AssemblyInfoInputs.cache
+C:\Projects\univ_practice\src\SchedulePlanner\ScheduleDomain\obj\Debug\net8.0\ScheduleDomain.AssemblyInfo.cs
+C:\Projects\univ_practice\src\SchedulePlanner\ScheduleDomain\obj\Debug\net8.0\ScheduleDomain.csproj.CoreCompileInputs.cache
+C:\Projects\univ_practice\src\SchedulePlanner\ScheduleDomain\obj\Debug\net8.0\ScheduleDomain.dll
+C:\Projects\univ_practice\src\SchedulePlanner\ScheduleDomain\obj\Debug\net8.0\refint\ScheduleDomain.dll
+C:\Projects\univ_practice\src\SchedulePlanner\ScheduleDomain\obj\Debug\net8.0\ScheduleDomain.pdb
+C:\Projects\univ_practice\src\SchedulePlanner\ScheduleDomain\obj\Debug\net8.0\ref\ScheduleDomain.dll
+C:\Projects\univ_practice\src\SchedulePlanner\ScheduleDomain\bin\Debug\net8.0\ScheduleDomain.runtimeconfig.json
+C:\Projects\univ_practice\src\SchedulePlanner\ScheduleDomain\obj\Debug\net8.0\ScheduleDomain.genruntimeconfig.cache
