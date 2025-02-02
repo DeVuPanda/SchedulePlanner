@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,13 +13,14 @@ namespace ScheduleInfrastructure.Controllers
 {
     public class ClassroomsController : Controller
     {
+
         private readonly UniversityPracticeContext _context;
 
         public ClassroomsController(UniversityPracticeContext context)
         {
             _context = context;
         }
-
+        [Authorize]
         // GET: Classrooms
         public async Task<IActionResult> Index()
         {

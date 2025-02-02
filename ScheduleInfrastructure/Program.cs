@@ -1,5 +1,7 @@
 using ScheduleInfrastructure;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,8 +9,17 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<UniversityPracticeContext>(option => option.UseSqlServer(
-builder.Configuration.GetConnectionString("DefaultConnection")
+    builder.Configuration.GetConnectionString("DefaultConnection")
 ));
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Users/Login";
+        options.AccessDeniedPath = "/Users/AccessDenied";
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(30); 
+        options.SlidingExpiration = true; 
+    });
 
 var app = builder.Build();
 
@@ -25,6 +36,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

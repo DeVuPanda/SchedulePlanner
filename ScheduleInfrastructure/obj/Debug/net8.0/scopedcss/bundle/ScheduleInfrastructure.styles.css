@@ -47,3 +47,7 @@ button.accept-policy[b-f6tcccwl9f] {
   white-space: nowrap;
   line-height: 60px;
 }
+
+.btn-danger[b-f6tcccwl9f] {
+    color: white !important;
+}

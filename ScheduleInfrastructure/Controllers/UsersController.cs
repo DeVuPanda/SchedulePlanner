@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +23,62 @@ namespace ScheduleInfrastructure.Controllers
             _context = context;
         }
 
+        [AllowAnonymous]
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [AllowAnonymous]
+        public async Task<IActionResult> Login(string email, string password)
+        {
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+            {
+                ModelState.AddModelError("", "Email and password are required.");
+                return View();
+            }
+
+            var user = await _context.Users
+                .Include(u => u.Role)
+                .FirstOrDefaultAsync(u => u.Email == email);
+
+            if (user == null)
+            {
+                ModelState.AddModelError("", "Invalid email or password.");
+                return View();
+            }
+
+            if (user.Password != password)  
+            {
+                ModelState.AddModelError("", "Invalid email or password.");
+                return View();
+            }
+
+            var claims = new List<Claim>
+            {
+                 new Claim(ClaimTypes.Name, user.FullName),
+                 new Claim(ClaimTypes.Email, user.Email),
+                 new Claim(ClaimTypes.Role, user.Role.RoleName),
+                 new Claim("RoleId", user.RoleId.ToString())
+            };
+
+            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(claimsIdentity));
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Login", "Users");
+        }
+
+        [Authorize]
         // GET: Users
         public async Task<IActionResult> Index()
         {
