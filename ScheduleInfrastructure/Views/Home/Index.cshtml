@@ -1,4 +1,52 @@
-﻿@{
+﻿@using System.Security.Claims
+@{
     ViewData["Title"] = "Home Page";
-} 
-<div class="text-center"> <h1 class="display-4">Welcome</h1> </div>
+}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <h1 class="display-4 mb-4">Welcome to Schedule Planner</h1>
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h2 class="h4" id="timeDisplay">Loading...</h2>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="h5 mb-3">Quick Access</h3>
+                            <a asp-controller="FinalSchedules" asp-action="Index" class="btn btn-outline-primary mb-2 w-100">View Schedule</a>
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                @if (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value == "Admin")
+                                {
+                                    <a asp-controller="SchedulePreferences" asp-action="Index" class="btn btn-outline-secondary w-100">See preferences</a>
+                                }
+                                else
+                                {
+                                    <a asp-controller="SchedulePreferences" asp-action="Index" class="btn btn-outline-secondary w-100">Make preferences</a>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        function updateDateTime() {
+            const timeDisplay = document.getElementById('timeDisplay');
+            const now = new Date();
+            timeDisplay.textContent = now.toLocaleString('en-US', {
+                weekday: 'long',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+        updateDateTime();
+        setInterval(updateDateTime, 60000);
+    </script>
+}

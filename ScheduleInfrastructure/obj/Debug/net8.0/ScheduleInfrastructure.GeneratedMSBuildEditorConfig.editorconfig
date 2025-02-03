@@ -66,6 +66,26 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGF5c09mV2Vla3NcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Projects/univ_practice/src/SchedulePlanner/ScheduleInfrastructure/Views/FinalSchedules/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRmluYWxTY2hlZHVsZXNcQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Projects/univ_practice/src/SchedulePlanner/ScheduleInfrastructure/Views/FinalSchedules/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRmluYWxTY2hlZHVsZXNcRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Projects/univ_practice/src/SchedulePlanner/ScheduleInfrastructure/Views/FinalSchedules/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRmluYWxTY2hlZHVsZXNcRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Projects/univ_practice/src/SchedulePlanner/ScheduleInfrastructure/Views/FinalSchedules/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRmluYWxTY2hlZHVsZXNcRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Projects/univ_practice/src/SchedulePlanner/ScheduleInfrastructure/Views/FinalSchedules/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRmluYWxTY2hlZHVsZXNcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Projects/univ_practice/src/SchedulePlanner/ScheduleInfrastructure/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -108,6 +128,26 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Projects/univ_practice/src/SchedulePlanner/ScheduleInfrastructure/Views/PairNumbers/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGFpck51bWJlcnNcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Projects/univ_practice/src/SchedulePlanner/ScheduleInfrastructure/Views/SchedulePreferences/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2NoZWR1bGVQcmVmZXJlbmNlc1xDcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Projects/univ_practice/src/SchedulePlanner/ScheduleInfrastructure/Views/SchedulePreferences/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2NoZWR1bGVQcmVmZXJlbmNlc1xEZWxldGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Projects/univ_practice/src/SchedulePlanner/ScheduleInfrastructure/Views/SchedulePreferences/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2NoZWR1bGVQcmVmZXJlbmNlc1xEZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Projects/univ_practice/src/SchedulePlanner/ScheduleInfrastructure/Views/SchedulePreferences/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2NoZWR1bGVQcmVmZXJlbmNlc1xFZGl0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Projects/univ_practice/src/SchedulePlanner/ScheduleInfrastructure/Views/SchedulePreferences/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2NoZWR1bGVQcmVmZXJlbmNlc1xJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Projects/univ_practice/src/SchedulePlanner/ScheduleInfrastructure/Views/Shared/Error.cshtml]
