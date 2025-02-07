@@ -1,61 +1,73 @@
-﻿@model IEnumerable<ScheduleDomain.Model.SchedulePreference>
+﻿@using System.Security.Claims
+@model IEnumerable<ScheduleDomain.Model.SchedulePreference>
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Schedule Preferences";
 }
-<h1>Index</h1>
-<p>
-    <a asp-action="Create" class="btn btn-success">Create New</a>
-</p>
-<table class="table">
+
+<h1>Schedule Preferences</h1>
+
+@if (TempData["ScheduleCreationMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["ScheduleCreationMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (TempData["ScheduleCreationError"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["ScheduleCreationError"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="row mb-3">
+    <div class="col-md-6">
+        <a asp-action="Create" class="btn btn-success">Create New Preference</a>
+
+        @if (User.Identity.IsAuthenticated)
+        {
+            @if (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value == "Admin")
+            {
+                <form asp-action="CreateSchedule" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-calendar-alt"></i> Create Schedule
+                    </button>
+                </form>
+            }
+        }
+    </div>
+</div>
+
+<table class="table table-striped">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Priority)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DayOfWeek)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MaxPairsPerDay)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PairNumber)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Subject)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Teacher)
-            </th>
-            <th></th>
+            <th>Priority</th>
+            <th>Day of Week</th>
+            <th>Max Pairs Per Day</th>
+            <th>Pair Number</th>
+            <th>Subject</th>
+            <th>Teacher</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
             <tr>
+                <td>@item.Priority</td>
+                <td>@item.DayOfWeek.DayName</td>
+                <td>@item.MaxPairsPerDay.Id</td>
+                <td>@item.PairNumber.Description</td>
+                <td>@item.Subject.Name</td>
+                <td>@item.Teacher.Email</td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Priority)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DayOfWeek.DayName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MaxPairsPerDay.Id)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PairNumber.Description)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Subject.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Teacher.Email)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
+                    <div class="btn-group" role="group">
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Edit</a>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info">Details</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Delete</a>
+                    </div>
                 </td>
             </tr>
         }

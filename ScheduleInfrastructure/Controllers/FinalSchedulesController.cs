@@ -67,6 +67,13 @@ namespace ScheduleInfrastructure.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,TeacherId,SubjectId,ClassroomId,DayOfWeekId,PairNumberId,IsClassroomAssigned")] FinalSchedule finalSchedule)
         {
+            ModelState.Remove("Classroom");
+            ModelState.Remove("ClassroomId");
+            ModelState.Remove("DayOfWeek");
+            ModelState.Remove("IsClassroomAssigned");
+            ModelState.Remove("PairNumber");
+            ModelState.Remove("Subject");
+            ModelState.Remove("Teacher");
             if (ModelState.IsValid)
             {
                 _context.Add(finalSchedule);
@@ -94,7 +101,7 @@ namespace ScheduleInfrastructure.Controllers
             {
                 return NotFound();
             }
-            ViewData["ClassroomId"] = new SelectList(_context.Classrooms, "Id", "Id", finalSchedule.ClassroomId);
+            ViewData["ClassroomId"] = new SelectList(_context.Classrooms, "Id", "RoomNumber", finalSchedule.ClassroomId);
             ViewData["DayOfWeekId"] = new SelectList(_context.DaysOfWeeks, "Id", "DayName", finalSchedule.DayOfWeekId);
             ViewData["PairNumberId"] = new SelectList(_context.PairNumbers, "Id", "Description", finalSchedule.PairNumberId);
             ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Name", finalSchedule.SubjectId);
@@ -114,8 +121,19 @@ namespace ScheduleInfrastructure.Controllers
                 return NotFound();
             }
 
+            ModelState.Remove("Classroom");
+            ModelState.Remove("DayOfWeek");
+            ModelState.Remove("IsClassroomAssigned");
+            ModelState.Remove("PairNumber");
+            ModelState.Remove("Subject");
+            ModelState.Remove("Teacher");
             if (ModelState.IsValid)
             {
+
+                if (finalSchedule.ClassroomId != null)
+                {
+                    finalSchedule.IsClassroomAssigned = true;
+                }
                 try
                 {
                     _context.Update(finalSchedule);
@@ -134,7 +152,7 @@ namespace ScheduleInfrastructure.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClassroomId"] = new SelectList(_context.Classrooms, "Id", "Id", finalSchedule.ClassroomId);
+            ViewData["ClassroomId"] = new SelectList(_context.Classrooms, "Id", "RoomNumber", finalSchedule.ClassroomId);
             ViewData["DayOfWeekId"] = new SelectList(_context.DaysOfWeeks, "Id", "DayName", finalSchedule.DayOfWeekId);
             ViewData["PairNumberId"] = new SelectList(_context.PairNumbers, "Id", "Description", finalSchedule.PairNumberId);
             ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Name", finalSchedule.SubjectId);

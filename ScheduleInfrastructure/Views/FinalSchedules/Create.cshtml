@@ -33,14 +33,14 @@
                 <select asp-for="PairNumberId" class ="form-control" asp-items="ViewBag.PairNumberId"></select>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Create" class="btn btn-primary" style="margin-top: 5px" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" btn-secondary" style="margin-top: 5px">Back to List</a>
 </div>
 
 @section Scripts {

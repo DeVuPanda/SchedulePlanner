@@ -13,7 +13,7 @@ public partial class FinalSchedule
     public int SubjectId { get; set; }
 
     [Display(Name = "Classroom")]
-    public int ClassroomId { get; set; }
+    public int? ClassroomId { get; set; }
 
     [Display(Name = "Day of week")]
     public int DayOfWeekId { get; set; }
@@ -24,7 +24,7 @@ public partial class FinalSchedule
     [Display(Name = "Is classroom assigned")]
     public bool? IsClassroomAssigned { get; set; }
 
-    public virtual Classroom Classroom { get; set; } = null!;
+    public virtual Classroom? Classroom { get; set; } = null!;
 
     [Display(Name = "Day of week")]
     public virtual DaysOfWeek DayOfWeek { get; set; } = null!;

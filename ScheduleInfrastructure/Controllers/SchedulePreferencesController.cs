@@ -253,6 +253,109 @@ namespace ScheduleInfrastructure.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpPost]
+        public async Task<IActionResult> CreateSchedule()
+        {
+            try
+            {
+                // Check if there are any schedule preferences
+                var schedulePreferencesCount = await _context.SchedulePreferences.CountAsync();
+                if (schedulePreferencesCount == 0)
+                {
+                    TempData["ScheduleCreationError"] = "No schedule preferences found. Please add preferences first.";
+                    return RedirectToAction(nameof(Index));
+                }
+
+                // Retrieve all schedule preferences with careful null checking
+                var schedulePreferences = await _context.SchedulePreferences
+                    .Include(sp => sp.DayOfWeek)
+                    .Include(sp => sp.PairNumber)
+                    .Include(sp => sp.Subject)
+                    .Include(sp => sp.Teacher)
+                    .Include(sp => sp.MaxPairsPerDay)
+                    .Where(sp =>
+                        sp.DayOfWeek != null &&
+                        sp.PairNumber != null &&
+                        sp.Subject != null &&
+                        sp.Teacher != null &&
+                        sp.MaxPairsPerDay != null)
+                    .OrderBy(sp => sp.Priority)
+                    .ToListAsync();
+
+                // Double-check if we have any valid preferences
+                if (!schedulePreferences.Any())
+                {
+                    TempData["ScheduleCreationError"] = "No valid schedule preferences found. Some preferences are missing required information.";
+                    return RedirectToAction(nameof(Index));
+                }
+
+                // Clear existing final schedules to prevent duplicates
+                _context.FinalSchedules.RemoveRange(_context.FinalSchedules);
+
+                // Tracking to prevent duplicate assignments
+                var assignedSlots = new HashSet<(int DayOfWeekId, int PairNumberId)>();
+                var teacherDailyPairs = new Dictionary<(int TeacherId, int DayOfWeekId), int>();
+
+                var finalSchedules = new List<FinalSchedule>();
+
+                foreach (var preference in schedulePreferences)
+                {
+                    // Null checks before accessing properties
+                    if (preference?.DayOfWeek == null ||
+                        preference.PairNumber == null ||
+                        preference.MaxPairsPerDay == null)
+                    {
+                        continue;
+                    }
+
+                    // Check if the slot is already taken
+                    var slotKey = (preference.DayOfWeekId, preference.PairNumberId);
+                    if (assignedSlots.Contains(slotKey))
+                        continue;
+
+                    // Check teacher's daily pair limit
+                    var teacherDailyKey = (preference.TeacherId, preference.DayOfWeekId);
+                    if (!teacherDailyPairs.ContainsKey(teacherDailyKey))
+                        teacherDailyPairs[teacherDailyKey] = 0;
+
+                    // Check if teacher has reached max pairs for the day
+                    if (teacherDailyPairs[teacherDailyKey] >= preference.MaxPairsPerDay.Id)
+                        continue;
+
+                    // Create final schedule entry
+                    var finalSchedule = new FinalSchedule
+                    {
+                        SubjectId = preference.SubjectId,
+                        TeacherId = preference.TeacherId,
+                        DayOfWeekId = preference.DayOfWeekId,
+                        PairNumberId = preference.PairNumberId,
+                        IsClassroomAssigned = false // You can modify this logic later
+                    };
+
+                    finalSchedules.Add(finalSchedule);
+                    _context.FinalSchedules.Add(finalSchedule);
+
+                    // Mark slot as assigned
+                    assignedSlots.Add(slotKey);
+                    teacherDailyPairs[teacherDailyKey]++;
+                }
+
+                // Save changes
+                await _context.SaveChangesAsync();
+
+                // Redirect back to the index with a success message
+                TempData["ScheduleCreationMessage"] = $"Schedule successfully created with {finalSchedules.Count} entries!";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (in a real application, use proper logging)
+                Console.Error.WriteLine(ex);
+                TempData["ScheduleCreationError"] = $"Error creating schedule: {ex.Message}";
+                return RedirectToAction(nameof(Index));
+            }
+        }
+
         private bool SchedulePreferenceExists(int id)
         {
             return _context.SchedulePreferences.Any(e => e.Id == id);
