@@ -329,7 +329,7 @@ namespace ScheduleInfrastructure.Controllers
                         TeacherId = preference.TeacherId,
                         DayOfWeekId = preference.DayOfWeekId,
                         PairNumberId = preference.PairNumberId,
-                        IsClassroomAssigned = false // You can modify this logic later
+                        IsClassroomAssigned = false 
                     };
 
                     finalSchedules.Add(finalSchedule);
@@ -354,6 +354,26 @@ namespace ScheduleInfrastructure.Controllers
                 TempData["ScheduleCreationError"] = $"Error creating schedule: {ex.Message}";
                 return RedirectToAction(nameof(Index));
             }
+        }
+
+        // GET: SchedulePreferences/DeleteAll
+        public IActionResult DeleteAll()
+        {
+            return View();
+        }
+
+        // POST: SchedulePreferences/DeleteAll
+        [HttpPost, ActionName("DeleteAll")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteAllConfirmed()
+        {
+            var allPreferences = await _context.SchedulePreferences.ToListAsync();
+            if (allPreferences.Any())
+            {
+                _context.SchedulePreferences.RemoveRange(allPreferences);
+                await _context.SaveChangesAsync();
+            }
+            return RedirectToAction(nameof(Index));
         }
 
         private bool SchedulePreferenceExists(int id)

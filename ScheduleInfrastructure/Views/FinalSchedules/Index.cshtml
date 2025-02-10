@@ -1,4 +1,5 @@
-﻿@model IEnumerable<ScheduleDomain.Model.FinalSchedule>
+﻿@using System.Security.Claims
+@model IEnumerable<ScheduleDomain.Model.FinalSchedule>
 
 @{
     ViewData["Title"] = "Index";
@@ -7,7 +8,17 @@
 <h1>Index</h1>
 
 <p>
-    <a asp-action="Create" class="btn btn-success">Create New</a>
+    @if (User.Identity.IsAuthenticated)
+    {
+        @if (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value == "Admin")
+        {
+            <a asp-action="Create" class="btn btn-success d-inline-block">Create New</a>
+            <a asp-action="DeleteAll" class="btn btn-danger d-inline-block ms-2">Delete All Records</a>
+        }
+    }
+    <a asp-action="DownloadSchedule" class="btn btn-primary d-inline-block ms-2">
+        <i class="fas fa-download"></i> Download Schedule
+    </a>
 </p>
 <table class="table">
     <thead>

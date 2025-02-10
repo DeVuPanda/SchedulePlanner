@@ -1,0 +1,13 @@
+﻿@{
+    ViewData["Title"] = "Delete All Schedules";
+}
+
+<h1>Delete All Schedules</h1>
+
+<h3>Are you sure you want to delete all schedules?</h3>
+<div>
+    <form asp-action="DeleteAll">
+        <input type="submit" value="Delete All" class="btn btn-danger" /> |
+        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+    </form>
+</div>

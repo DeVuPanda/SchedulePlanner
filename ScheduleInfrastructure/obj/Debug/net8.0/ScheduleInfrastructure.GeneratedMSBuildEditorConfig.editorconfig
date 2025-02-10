@@ -74,6 +74,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRmluYWxTY2hlZHVsZXNcRGVsZXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Projects/univ_practice/src/SchedulePlanner/ScheduleInfrastructure/Views/FinalSchedules/DeleteAll.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRmluYWxTY2hlZHVsZXNcRGVsZXRlQWxsLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Projects/univ_practice/src/SchedulePlanner/ScheduleInfrastructure/Views/FinalSchedules/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRmluYWxTY2hlZHVsZXNcRGV0YWlscy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -136,6 +140,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Projects/univ_practice/src/SchedulePlanner/ScheduleInfrastructure/Views/SchedulePreferences/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2NoZWR1bGVQcmVmZXJlbmNlc1xEZWxldGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Projects/univ_practice/src/SchedulePlanner/ScheduleInfrastructure/Views/SchedulePreferences/DeleteAll.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2NoZWR1bGVQcmVmZXJlbmNlc1xEZWxldGVBbGwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Projects/univ_practice/src/SchedulePlanner/ScheduleInfrastructure/Views/SchedulePreferences/Details.cshtml]
