@@ -1,11 +1,12 @@
 ﻿@using System.Security.Claims
 @model IEnumerable<ScheduleDomain.Model.FinalSchedule>
-
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Schedule";
+    var days = Model.Select(s => s.DayOfWeek).OrderBy(d => d.Id).Distinct().ToList();
+    var pairs = Model.Select(s => s.PairNumber).OrderBy(p => p.Id).Distinct().ToList();
 }
 
-<h1>Index</h1>
+<h1>Schedule</h1>
 
 <p>
     @if (User.Identity.IsAuthenticated)
@@ -20,57 +21,64 @@
         <i class="fas fa-download"></i> Download Schedule
     </a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.IsClassroomAssigned)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Classroom)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DayOfWeek)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PairNumber)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Subject)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Teacher)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsClassroomAssigned)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Classroom.RoomNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DayOfWeek.DayName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PairNumber.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Subject.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Teacher.Email)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th></th>
+                @foreach (var day in days)
+                {
+                    <th class="text-center bg-light">@day.DayName</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var pair in pairs)
+            {
+                <tr>
+                    <th class="bg-light">@pair.Description</th>
+                    @foreach (var day in days)
+                    {
+                        <td class="align-middle">
+                            @{
+                                var schedule = Model.FirstOrDefault(s => 
+                                    s.DayOfWeek.Id == day.Id && 
+                                    s.PairNumber.Id == pair.Id);
+                            }
+                            @if (schedule != null)
+                            {
+                                <div class="p-2">
+                                    <div class="fw-bold">@schedule.Subject.Name</div>
+                                    <div class="text-muted">@schedule.Teacher.Email</div>
+                                    @if (schedule.IsClassroomAssigned == true && schedule.Classroom != null)
+                                    {
+                                        <div class="text-success">Room: @schedule.Classroom.RoomNumber</div>
+                                    }
+                                    @if (User.Identity.IsAuthenticated && User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value == "Admin")
+                                    {
+                                        <div class="mt-2">
+                                            <a asp-action="Edit" asp-route-id="@schedule.Id" class="btn btn-warning btn-sm">Edit</a>
+                                            <a asp-action="Details" asp-route-id="@schedule.Id" class="btn btn-info btn-sm">Details</a>
+                                            <a asp-action="Delete" asp-route-id="@schedule.Id" class="btn btn-danger btn-sm">Delete</a>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<style>
+    .table td {
+        min-width: 200px;
+        vertical-align: middle;
+    }
+    .table th {
+        min-width: 100px;
+    }
+</style>

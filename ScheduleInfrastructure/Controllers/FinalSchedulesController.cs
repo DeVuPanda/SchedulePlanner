@@ -219,11 +219,8 @@ namespace ScheduleInfrastructure.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-
-        // GET: FinalSchedules/DownloadSchedule
         public async Task<IActionResult> DownloadSchedule()
         {
-            // Get the data with all necessary includes
             var schedules = await _context.FinalSchedules
                 .Include(f => f.Classroom)
                 .Include(f => f.DayOfWeek)
@@ -236,42 +233,67 @@ namespace ScheduleInfrastructure.Controllers
             {
                 var worksheet = workbook.Worksheets.Add("Schedule");
 
-                // Add headers
-                worksheet.Cell(1, 1).Value = "Classroom";
-                worksheet.Cell(1, 2).Value = "Day of Week";
-                worksheet.Cell(1, 3).Value = "Pair Number";
-                worksheet.Cell(1, 4).Value = "Subject";
-                worksheet.Cell(1, 5).Value = "Teacher";
-                worksheet.Cell(1, 6).Value = "Is Classroom Assigned";
+                // Get unique days and pair numbers for headers
+                var days = schedules.Select(s => s.DayOfWeek).OrderBy(d => d.Id).Distinct().ToList();
+                var pairs = schedules.Select(s => s.PairNumber).OrderBy(p => p.Id).Distinct().ToList();
 
-                // Add data
-                int row = 2;
-                foreach (var schedule in schedules)
+                // Add day headers starting from column 2
+                for (int i = 0; i < days.Count; i++)
                 {
-                    worksheet.Cell(row, 1).Value = schedule.Classroom?.RoomNumber ?? "Not Assigned";
-                    worksheet.Cell(row, 2).Value = schedule.DayOfWeek.DayName;
-                    worksheet.Cell(row, 3).Value = schedule.PairNumber.Description;
-                    worksheet.Cell(row, 4).Value = schedule.Subject.Name;
-                    worksheet.Cell(row, 5).Value = schedule.Teacher.Email;
-                    worksheet.Cell(row, 6).Value = schedule.IsClassroomAssigned ?? false;
-                    row++;
+                    worksheet.Cell(1, i + 2).Value = days[i].DayName;
                 }
 
-                // Auto-fit columns
-                worksheet.Columns().AdjustToContents();
+                // Add pair numbers in first column starting from row 2
+                for (int i = 0; i < pairs.Count; i++)
+                {
+                    worksheet.Cell(i + 2, 1).Value = pairs[i].Description;
+                }
 
-                // Style the header row
+                // Fill the schedule grid
+                for (int rowIndex = 0; rowIndex < pairs.Count; rowIndex++)
+                {
+                    for (int colIndex = 0; colIndex < days.Count; colIndex++)
+                    {
+                        var currentSchedule = schedules.FirstOrDefault(s =>
+                            s.DayOfWeek.Id == days[colIndex].Id &&
+                            s.PairNumber.Id == pairs[rowIndex].Id);
+
+                        if (currentSchedule != null)
+                        {
+                            var cell = worksheet.Cell(rowIndex + 2, colIndex + 2);
+                            var cellValue = $"{currentSchedule.Subject.Name}\n{currentSchedule.Teacher.FullName}";
+
+                            if (currentSchedule.IsClassroomAssigned == true && currentSchedule.Classroom != null)
+                            {
+                                cellValue += $"\nRoom: {currentSchedule.Classroom.RoomNumber}";
+                            }
+
+                            cell.Value = cellValue;
+                            cell.Style.Alignment.WrapText = true;
+                        }
+                    }
+                }
+
+                // Style the worksheet
+                worksheet.Column(1).Style.Font.Bold = true;
                 var headerRow = worksheet.Row(1);
                 headerRow.Style.Font.Bold = true;
                 headerRow.Style.Fill.BackgroundColor = XLColor.LightGray;
 
-                // Create a memory stream to save the workbook
+                // Adjust column widths and row heights
+                worksheet.Columns().AdjustToContents();
+                worksheet.Rows().AdjustToContents();
+
+                // Add borders
+                var dataRange = worksheet.Range(1, 1, pairs.Count + 1, days.Count + 1);
+                dataRange.Style.Border.OutsideBorder = XLBorderStyleValues.Medium;
+                dataRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+
                 using (var stream = new MemoryStream())
                 {
                     workbook.SaveAs(stream);
                     stream.Position = 0;
 
-                    // Return the Excel file
                     return File(
                         stream.ToArray(),
                         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
