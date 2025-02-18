@@ -12,6 +12,8 @@ public partial class FinalSchedule
 
     public int SubjectId { get; set; }
 
+    public int GroupId { get; set; }
+
     [Display(Name = "Classroom")]
     public int? ClassroomId { get; set; }
 
@@ -35,4 +37,6 @@ public partial class FinalSchedule
     public virtual Subject Subject { get; set; } = null!;
 
     public virtual User Teacher { get; set; } = null!;
+
+    public virtual Group Group { get; set; } = null!;
 }

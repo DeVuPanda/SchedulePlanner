@@ -1,11 +1,8 @@
 ﻿@model ScheduleDomain.Model.SchedulePreference
-
 @{
     ViewData["Title"] = "Edit";
 }
-
 <h1>Edit</h1>
-
 <h4>Schedule preference</h4>
 <hr />
 <div class="row">
@@ -13,11 +10,7 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="TeacherId" class="control-label"></label>
-                <select asp-for="TeacherId" class="form-control" asp-items="ViewBag.TeacherId"></select>
-                <span asp-validation-for="TeacherId" class="text-danger"></span>
-            </div>
+            <input type="hidden" asp-for="TeacherId" />
             <div class="form-group">
                 <label asp-for="SubjectId" class="control-label"></label>
                 <select asp-for="SubjectId" class="form-control" asp-items="ViewBag.SubjectId"></select>
@@ -49,11 +42,9 @@
         </form>
     </div>
 </div>
-
 <div>
     <a asp-action="Index" class="btn btn-secondary" style="margin-top: 5px">Back to List</a>
 </div>
-
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

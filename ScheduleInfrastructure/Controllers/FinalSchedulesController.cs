@@ -21,10 +21,28 @@ namespace ScheduleInfrastructure.Controllers
         }
 
         // GET: FinalSchedules
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? groupId)
         {
-            var universityPracticeContext = _context.FinalSchedules.Include(f => f.Classroom).Include(f => f.DayOfWeek).Include(f => f.PairNumber).Include(f => f.Subject).Include(f => f.Teacher);
-            return View(await universityPracticeContext.ToListAsync());
+            var schedules = await _context.FinalSchedules
+                .Include(f => f.Classroom)
+                .Include(f => f.DayOfWeek)
+                .Include(f => f.PairNumber)
+                .Include(f => f.Subject)
+                .Include(f => f.Teacher)
+                .Include(f => f.Group)
+                .ToListAsync();
+
+            // Filter by group if groupId is provided
+            if (groupId.HasValue)
+            {
+                schedules = schedules.Where(s => s.GroupId == groupId).ToList();
+            }
+
+            // Get all groups for the dropdown
+            ViewBag.Groups = await _context.Groups.OrderBy(g => g.GroupName).ToListAsync();
+            ViewBag.SelectedGroupId = groupId;
+
+            return View(schedules);
         }
 
         // GET: FinalSchedules/Details/5
@@ -41,6 +59,7 @@ namespace ScheduleInfrastructure.Controllers
                 .Include(f => f.PairNumber)
                 .Include(f => f.Subject)
                 .Include(f => f.Teacher)
+                .Include(f => f.Group)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (finalSchedule == null)
             {
@@ -58,15 +77,13 @@ namespace ScheduleInfrastructure.Controllers
             ViewData["PairNumberId"] = new SelectList(_context.PairNumbers, "Id", "Description");
             ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Name");
             ViewData["TeacherId"] = new SelectList(_context.Users, "Id", "Email");
+            ViewData["GroupId"] = new SelectList(_context.Groups, "Id", "GroupName");
             return View();
         }
 
-        // POST: FinalSchedules/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,TeacherId,SubjectId,ClassroomId,DayOfWeekId,PairNumberId,IsClassroomAssigned")] FinalSchedule finalSchedule)
+        public async Task<IActionResult> Create([Bind("Id,TeacherId,SubjectId,GroupId,ClassroomId,DayOfWeekId,PairNumberId,IsClassroomAssigned")] FinalSchedule finalSchedule)
         {
             ModelState.Remove("Classroom");
             ModelState.Remove("ClassroomId");
@@ -75,17 +92,22 @@ namespace ScheduleInfrastructure.Controllers
             ModelState.Remove("PairNumber");
             ModelState.Remove("Subject");
             ModelState.Remove("Teacher");
+            ModelState.Remove("Group");
+
             if (ModelState.IsValid)
             {
                 _context.Add(finalSchedule);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["ClassroomId"] = new SelectList(_context.Classrooms, "Id", "Id", finalSchedule.ClassroomId);
             ViewData["DayOfWeekId"] = new SelectList(_context.DaysOfWeeks, "Id", "DayName", finalSchedule.DayOfWeekId);
             ViewData["PairNumberId"] = new SelectList(_context.PairNumbers, "Id", "Description", finalSchedule.PairNumberId);
             ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Name", finalSchedule.SubjectId);
             ViewData["TeacherId"] = new SelectList(_context.Users, "Id", "Email", finalSchedule.TeacherId);
+            ViewData["GroupId"] = new SelectList(_context.Groups, "Id", "Name", finalSchedule.GroupId);
+
             return View(finalSchedule);
         }
 
@@ -97,25 +119,33 @@ namespace ScheduleInfrastructure.Controllers
                 return NotFound();
             }
 
-            var finalSchedule = await _context.FinalSchedules.FindAsync(id);
+            var finalSchedule = await _context.FinalSchedules
+                .Include(f => f.Teacher)
+                .Include(f => f.Subject)
+                .Include(f => f.Classroom)
+                .Include(f => f.DayOfWeek)
+                .Include(f => f.PairNumber)
+                .Include(f => f.Group)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
             if (finalSchedule == null)
             {
                 return NotFound();
             }
+
             ViewData["ClassroomId"] = new SelectList(_context.Classrooms, "Id", "RoomNumber", finalSchedule.ClassroomId);
             ViewData["DayOfWeekId"] = new SelectList(_context.DaysOfWeeks, "Id", "DayName", finalSchedule.DayOfWeekId);
             ViewData["PairNumberId"] = new SelectList(_context.PairNumbers, "Id", "Description", finalSchedule.PairNumberId);
             ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Name", finalSchedule.SubjectId);
             ViewData["TeacherId"] = new SelectList(_context.Users, "Id", "Email", finalSchedule.TeacherId);
+            ViewData["GroupId"] = new SelectList(_context.Groups, "Id", "GroupName", finalSchedule.GroupId);
             return View(finalSchedule);
         }
 
         // POST: FinalSchedules/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,TeacherId,SubjectId,ClassroomId,DayOfWeekId,PairNumberId,IsClassroomAssigned")] FinalSchedule finalSchedule)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,TeacherId,SubjectId,GroupId,ClassroomId,DayOfWeekId,PairNumberId,IsClassroomAssigned")] FinalSchedule finalSchedule)
         {
             if (id != finalSchedule.Id)
             {
@@ -124,21 +154,23 @@ namespace ScheduleInfrastructure.Controllers
 
             ModelState.Remove("Classroom");
             ModelState.Remove("DayOfWeek");
-            ModelState.Remove("IsClassroomAssigned");
             ModelState.Remove("PairNumber");
             ModelState.Remove("Subject");
             ModelState.Remove("Teacher");
+            ModelState.Remove("Group");
+
             if (ModelState.IsValid)
             {
-
-                if (finalSchedule.ClassroomId != null)
-                {
-                    finalSchedule.IsClassroomAssigned = true;
-                }
                 try
                 {
+                    if (finalSchedule.ClassroomId != null)
+                    {
+                        finalSchedule.IsClassroomAssigned = true;
+                    }
+
                     _context.Update(finalSchedule);
                     await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -151,13 +183,14 @@ namespace ScheduleInfrastructure.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
             }
+
             ViewData["ClassroomId"] = new SelectList(_context.Classrooms, "Id", "RoomNumber", finalSchedule.ClassroomId);
             ViewData["DayOfWeekId"] = new SelectList(_context.DaysOfWeeks, "Id", "DayName", finalSchedule.DayOfWeekId);
             ViewData["PairNumberId"] = new SelectList(_context.PairNumbers, "Id", "Description", finalSchedule.PairNumberId);
             ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Name", finalSchedule.SubjectId);
             ViewData["TeacherId"] = new SelectList(_context.Users, "Id", "Email", finalSchedule.TeacherId);
+            ViewData["GroupId"] = new SelectList(_context.Groups, "Id", "GroupName", finalSchedule.GroupId);
             return View(finalSchedule);
         }
 
@@ -175,6 +208,7 @@ namespace ScheduleInfrastructure.Controllers
                 .Include(f => f.PairNumber)
                 .Include(f => f.Subject)
                 .Include(f => f.Teacher)
+                .Include(f => f.Group)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (finalSchedule == null)
             {
@@ -227,73 +261,90 @@ namespace ScheduleInfrastructure.Controllers
                 .Include(f => f.PairNumber)
                 .Include(f => f.Subject)
                 .Include(f => f.Teacher)
+                .Include(f => f.Group)
                 .ToListAsync();
 
             using (var workbook = new XLWorkbook())
             {
-                var worksheet = workbook.Worksheets.Add("Schedule");
+                // Get all unique groups
+                var groups = schedules.Select(s => s.Group)
+                                    .OrderBy(g => g.GroupName)
+                                    .Distinct()
+                                    .ToList();
 
-                // Get unique days and pair numbers for headers
-                var days = schedules.Select(s => s.DayOfWeek).OrderBy(d => d.Id).Distinct().ToList();
-                var pairs = schedules.Select(s => s.PairNumber).OrderBy(p => p.Id).Distinct().ToList();
-
-                // Add day headers starting from column 2
-                for (int i = 0; i < days.Count; i++)
+                // Create a worksheet for each group
+                foreach (var group in groups)
                 {
-                    worksheet.Cell(1, i + 2).Value = days[i].DayName;
-                }
+                    var groupSchedules = schedules.Where(s => s.GroupId == group.Id).ToList();
+                    var worksheet = workbook.Worksheets.Add(group.GroupName);
 
-                // Add pair numbers in first column starting from row 2
-                for (int i = 0; i < pairs.Count; i++)
-                {
-                    worksheet.Cell(i + 2, 1).Value = pairs[i].Description;
-                }
+                    // Get unique days and pair numbers for headers
+                    var days = groupSchedules.Select(s => s.DayOfWeek)
+                                           .OrderBy(d => d.Id)
+                                           .Distinct()
+                                           .ToList();
+                    var pairs = groupSchedules.Select(s => s.PairNumber)
+                                            .OrderBy(p => p.Id)
+                                            .Distinct()
+                                            .ToList();
 
-                // Fill the schedule grid
-                for (int rowIndex = 0; rowIndex < pairs.Count; rowIndex++)
-                {
-                    for (int colIndex = 0; colIndex < days.Count; colIndex++)
+                    // Add day headers starting from column 2
+                    for (int i = 0; i < days.Count; i++)
                     {
-                        var currentSchedule = schedules.FirstOrDefault(s =>
-                            s.DayOfWeek.Id == days[colIndex].Id &&
-                            s.PairNumber.Id == pairs[rowIndex].Id);
+                        worksheet.Cell(1, i + 2).Value = days[i].DayName;
+                    }
 
-                        if (currentSchedule != null)
+                    // Add pair numbers in first column starting from row 2
+                    for (int i = 0; i < pairs.Count; i++)
+                    {
+                        worksheet.Cell(i + 2, 1).Value = pairs[i].Description;
+                    }
+
+                    // Fill the schedule grid
+                    for (int rowIndex = 0; rowIndex < pairs.Count; rowIndex++)
+                    {
+                        for (int colIndex = 0; colIndex < days.Count; colIndex++)
                         {
-                            var cell = worksheet.Cell(rowIndex + 2, colIndex + 2);
-                            var cellValue = $"{currentSchedule.Subject.Name}\n{currentSchedule.Teacher.FullName}";
+                            var currentSchedule = groupSchedules.FirstOrDefault(s =>
+                                s.DayOfWeek.Id == days[colIndex].Id &&
+                                s.PairNumber.Id == pairs[rowIndex].Id);
 
-                            if (currentSchedule.IsClassroomAssigned == true && currentSchedule.Classroom != null)
+                            if (currentSchedule != null)
                             {
-                                cellValue += $"\nRoom: {currentSchedule.Classroom.RoomNumber}";
-                            }
+                                var cell = worksheet.Cell(rowIndex + 2, colIndex + 2);
+                                var cellValue = $"{currentSchedule.Subject.Name}\n{currentSchedule.Teacher.FullName}";
 
-                            cell.Value = cellValue;
-                            cell.Style.Alignment.WrapText = true;
+                                if (currentSchedule.IsClassroomAssigned == true && currentSchedule.Classroom != null)
+                                {
+                                    cellValue += $"\nRoom: {currentSchedule.Classroom.RoomNumber}";
+                                }
+
+                                cell.Value = cellValue;
+                                cell.Style.Alignment.WrapText = true;
+                            }
                         }
                     }
+
+                    // Style the worksheet
+                    worksheet.Column(1).Style.Font.Bold = true;
+                    var headerRow = worksheet.Row(1);
+                    headerRow.Style.Font.Bold = true;
+                    headerRow.Style.Fill.BackgroundColor = XLColor.LightGray;
+
+                    // Adjust column widths and row heights
+                    worksheet.Columns().AdjustToContents();
+                    worksheet.Rows().AdjustToContents();
+
+                    // Add borders
+                    var dataRange = worksheet.Range(1, 1, pairs.Count + 1, days.Count + 1);
+                    dataRange.Style.Border.OutsideBorder = XLBorderStyleValues.Medium;
+                    dataRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
                 }
-
-                // Style the worksheet
-                worksheet.Column(1).Style.Font.Bold = true;
-                var headerRow = worksheet.Row(1);
-                headerRow.Style.Font.Bold = true;
-                headerRow.Style.Fill.BackgroundColor = XLColor.LightGray;
-
-                // Adjust column widths and row heights
-                worksheet.Columns().AdjustToContents();
-                worksheet.Rows().AdjustToContents();
-
-                // Add borders
-                var dataRange = worksheet.Range(1, 1, pairs.Count + 1, days.Count + 1);
-                dataRange.Style.Border.OutsideBorder = XLBorderStyleValues.Medium;
-                dataRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
 
                 using (var stream = new MemoryStream())
                 {
                     workbook.SaveAs(stream);
                     stream.Position = 0;
-
                     return File(
                         stream.ToArray(),
                         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",

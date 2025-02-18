@@ -13,9 +13,13 @@ public partial class Subject
 
     public int Hours { get; set; }
 
+    public int GroupId { get; set; }
+
     public virtual ICollection<FinalSchedule> FinalSchedules { get; set; } = new List<FinalSchedule>();
 
     public virtual ICollection<SchedulePreference> SchedulePreferences { get; set; } = new List<SchedulePreference>();
 
     public virtual User Teacher { get; set; } = null!;
+
+    public virtual Group Group { get; set; } = null!;
 }

@@ -12,6 +12,8 @@ public partial class SchedulePreference
 
     public int SubjectId { get; set; }
 
+    public int GroupId { get; set; }
+
     [Display(Name = "Day of week")]
     public int DayOfWeekId { get; set; }
 
@@ -35,4 +37,6 @@ public partial class SchedulePreference
     public virtual Subject Subject { get; set; } = null!;
 
     public virtual User Teacher { get; set; } = null!;
+
+    public virtual Group Group { get; set; } = null!;
 }

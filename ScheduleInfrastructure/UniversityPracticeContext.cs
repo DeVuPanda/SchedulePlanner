@@ -203,4 +203,6 @@ public partial class UniversityPracticeContext : DbContext
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+public DbSet<ScheduleDomain.Model.Group> Groups { get; set; } = default!;
 }

@@ -9,10 +9,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{0260A97F-7EF8-4A7C-A40F-48216B3C3D0A}|ScheduleInfrastructure\\ScheduleInfrastructure.csproj|c:\\projects\\univ_practice\\src\\scheduleplanner\\scheduleinfrastructure\\controllers\\finalschedulescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{0260A97F-7EF8-4A7C-A40F-48216B3C3D0A}|ScheduleInfrastructure\\ScheduleInfrastructure.csproj|solutionrelative:scheduleinfrastructure\\controllers\\finalschedulescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{0260A97F-7EF8-4A7C-A40F-48216B3C3D0A}|ScheduleInfrastructure\\ScheduleInfrastructure.csproj|c:\\projects\\univ_practice\\src\\scheduleplanner\\scheduleinfrastructure\\views\\finalschedules\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{0260A97F-7EF8-4A7C-A40F-48216B3C3D0A}|ScheduleInfrastructure\\ScheduleInfrastructure.csproj|solutionrelative:scheduleinfrastructure\\views\\finalschedules\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     }
   ],
   "DocumentGroupContainers": [
@@ -22,7 +18,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Bookmark",
@@ -34,28 +30,15 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Create.cshtml",
-              "DocumentMoniker": "C:\\Projects\\univ_practice\\src\\SchedulePlanner\\ScheduleInfrastructure\\Views\\FinalSchedules\\Create.cshtml",
-              "RelativeDocumentMoniker": "ScheduleInfrastructure\\Views\\FinalSchedules\\Create.cshtml",
-              "ToolTip": "C:\\Projects\\univ_practice\\src\\SchedulePlanner\\ScheduleInfrastructure\\Views\\FinalSchedules\\Create.cshtml",
-              "RelativeToolTip": "ScheduleInfrastructure\\Views\\FinalSchedules\\Create.cshtml",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAACoAAABAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-02-13T10:24:54.709Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 0,
               "Title": "Index.cshtml",
               "DocumentMoniker": "C:\\Projects\\univ_practice\\src\\SchedulePlanner\\ScheduleInfrastructure\\Views\\FinalSchedules\\Index.cshtml",
               "RelativeDocumentMoniker": "ScheduleInfrastructure\\Views\\FinalSchedules\\Index.cshtml",
               "ToolTip": "C:\\Projects\\univ_practice\\src\\SchedulePlanner\\ScheduleInfrastructure\\Views\\FinalSchedules\\Index.cshtml",
               "RelativeToolTip": "ScheduleInfrastructure\\Views\\FinalSchedules\\Index.cshtml",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAAAAAAA",
+              "ViewState": "AQIAAEgAAAAAAAAAAAAAAHkAAAAIAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-02-10T14:26:42.183Z",
+              "WhenOpened": "2025-02-16T19:18:24.797Z",
               "EditorCaption": ""
             },
             {
@@ -66,9 +49,9 @@
               "RelativeDocumentMoniker": "ScheduleInfrastructure\\Controllers\\FinalSchedulesController.cs",
               "ToolTip": "C:\\Projects\\univ_practice\\src\\SchedulePlanner\\ScheduleInfrastructure\\Controllers\\FinalSchedulesController.cs",
               "RelativeToolTip": "ScheduleInfrastructure\\Controllers\\FinalSchedulesController.cs",
-              "ViewState": "AQIAABQBAAAAAAAAAAAiwAkAAAAWAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAGEBAAAJAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-09T16:54:44.76Z",
+              "WhenOpened": "2025-02-16T17:07:24.193Z",
               "EditorCaption": ""
             }
           ]

@@ -31,6 +31,7 @@ namespace ScheduleInfrastructure.Controllers
                 .Include(s => s.MaxPairsPerDay)
                 .Include(s => s.PairNumber)
                 .Include(s => s.Subject)
+                    .ThenInclude(s => s.Group) // Include Group information
                 .Include(s => s.Teacher);
 
             if (!isAdmin)
@@ -46,7 +47,6 @@ namespace ScheduleInfrastructure.Controllers
             return View(schedulePreferences);
         }
 
-
         // GET: SchedulePreferences/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -60,8 +60,10 @@ namespace ScheduleInfrastructure.Controllers
                 .Include(s => s.MaxPairsPerDay)
                 .Include(s => s.PairNumber)
                 .Include(s => s.Subject)
+                    .ThenInclude(s => s.Group) // Include Group information
                 .Include(s => s.Teacher)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (schedulePreference == null)
             {
                 return NotFound();
@@ -73,10 +75,7 @@ namespace ScheduleInfrastructure.Controllers
         // GET: SchedulePreferences/Create
         public IActionResult Create()
         {
-            // Get the current user's full name from claims
             var userFullName = User.Identity.Name;
-
-            // Find the user ID from the database using the full name
             var teacher = _context.Users
                 .FirstOrDefault(u => u.FullName == userFullName);
 
@@ -85,13 +84,14 @@ namespace ScheduleInfrastructure.Controllers
                 return NotFound($"Unable to find user: {userFullName}");
             }
 
-            // Get only subjects assigned to this teacher
+            // Get subjects assigned to this teacher, including group information
             var teacherSubjects = _context.Subjects
+                .Include(s => s.Group)
                 .Where(s => s.TeacherId == teacher.Id)
                 .Select(s => new SelectListItem
                 {
                     Value = s.Id.ToString(),
-                    Text = s.Name
+                    Text = $"{s.Name} ({s.Group.GroupName})" // Include group name in the display text
                 });
 
             ViewData["DayOfWeekId"] = new SelectList(_context.DaysOfWeeks, "Id", "DayName");
@@ -99,7 +99,6 @@ namespace ScheduleInfrastructure.Controllers
             ViewData["PairNumberId"] = new SelectList(_context.PairNumbers, "Id", "Description");
             ViewData["SubjectId"] = new SelectList(teacherSubjects, "Value", "Text");
 
-            // Create a new SchedulePreference with the TeacherId pre-set
             var schedulePreference = new SchedulePreference { TeacherId = teacher.Id };
             return View(schedulePreference);
         }
@@ -108,10 +107,7 @@ namespace ScheduleInfrastructure.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("SubjectId,DayOfWeekId,PairNumberId,MaxPairsPerDayId,Priority")] SchedulePreference schedulePreference)
         {
-            // Get the current user's full name from claims
             var userFullName = User.Identity.Name;
-
-            // Find the user ID from the database
             var teacher = await _context.Users
                 .FirstOrDefaultAsync(u => u.FullName == userFullName);
 
@@ -120,33 +116,163 @@ namespace ScheduleInfrastructure.Controllers
                 return NotFound($"Unable to find user: {userFullName}");
             }
 
-            // Set the TeacherId
+            // Get the subject with its group
+            var subject = await _context.Subjects
+                .Include(s => s.Group)
+                .FirstOrDefaultAsync(s => s.Id == schedulePreference.SubjectId);
+
+            if (subject == null)
+            {
+                return NotFound($"Unable to find subject with ID: {schedulePreference.SubjectId}");
+            }
+
             schedulePreference.TeacherId = teacher.Id;
+            schedulePreference.GroupId = subject.GroupId; // Set the GroupId from the subject
+
+            // Remove navigation properties from ModelState
             ModelState.Remove("DayOfWeek");
             ModelState.Remove("MaxPairsPerDay");
             ModelState.Remove("PairNumber");
             ModelState.Remove("Subject");
             ModelState.Remove("Teacher");
+            ModelState.Remove("Group");
+
             if (ModelState.IsValid)
             {
-                _context.Add(schedulePreference);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    _context.Add(schedulePreference);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", "An error occurred while saving the preference. Please try again.");
+                    // Log the exception details
+                    Console.WriteLine(ex);
+                }
             }
 
             // If we get here, something failed - redisplay form
             var teacherSubjects = _context.Subjects
+                .Include(s => s.Group)
                 .Where(s => s.TeacherId == teacher.Id)
                 .Select(s => new SelectListItem
                 {
                     Value = s.Id.ToString(),
-                    Text = s.Name
+                    Text = $"{s.Name} ({s.Group.GroupName})"
                 });
 
             ViewData["DayOfWeekId"] = new SelectList(_context.DaysOfWeeks, "Id", "DayName", schedulePreference.DayOfWeekId);
             ViewData["MaxPairsPerDayId"] = new SelectList(_context.MaxPairsPerDays, "Id", "Id", schedulePreference.MaxPairsPerDayId);
             ViewData["PairNumberId"] = new SelectList(_context.PairNumbers, "Id", "Description", schedulePreference.PairNumberId);
             ViewData["SubjectId"] = new SelectList(teacherSubjects, "Value", "Text", schedulePreference.SubjectId);
+
+            return View(schedulePreference);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("Id,TeacherId,SubjectId,DayOfWeekId,PairNumberId,MaxPairsPerDayId,Priority")] SchedulePreference schedulePreference)
+        {
+            if (id != schedulePreference.Id)
+            {
+                return NotFound();
+            }
+
+            // Get the subject with its group
+            var subject = await _context.Subjects
+                .Include(s => s.Group)
+                .FirstOrDefaultAsync(s => s.Id == schedulePreference.SubjectId);
+
+            if (subject == null)
+            {
+                return NotFound($"Unable to find subject with ID: {schedulePreference.SubjectId}");
+            }
+
+            schedulePreference.GroupId = subject.GroupId; // Set the GroupId from the subject
+
+            ModelState.Remove("DayOfWeek");
+            ModelState.Remove("MaxPairsPerDay");
+            ModelState.Remove("PairNumber");
+            ModelState.Remove("Subject");
+            ModelState.Remove("Teacher");
+            ModelState.Remove("Group");
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(schedulePreference);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!SchedulePreferenceExists(schedulePreference.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            }
+
+            var teacherSubjects = _context.Subjects
+                .Include(s => s.Group)
+                .Where(s => s.TeacherId == schedulePreference.TeacherId)
+                .Select(s => new SelectListItem
+                {
+                    Value = s.Id.ToString(),
+                    Text = $"{s.Name} ({s.Group.GroupName})"
+                });
+
+            ViewData["DayOfWeekId"] = new SelectList(_context.DaysOfWeeks, "Id", "DayName", schedulePreference.DayOfWeekId);
+            ViewData["MaxPairsPerDayId"] = new SelectList(_context.MaxPairsPerDays, "Id", "Id", schedulePreference.MaxPairsPerDayId);
+            ViewData["PairNumberId"] = new SelectList(_context.PairNumbers, "Id", "Description", schedulePreference.PairNumberId);
+            ViewData["SubjectId"] = new SelectList(teacherSubjects, "Value", "Text", schedulePreference.SubjectId);
+
+            return View(schedulePreference);
+        }
+
+        // POST: SchedulePreferences/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var schedulePreference = await _context.SchedulePreferences.FindAsync(id);
+            if (schedulePreference != null)
+            {
+                _context.SchedulePreferences.Remove(schedulePreference);
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        // GET: SchedulePreferences/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var schedulePreference = await _context.SchedulePreferences
+                .Include(s => s.DayOfWeek)
+                .Include(s => s.MaxPairsPerDay)
+                .Include(s => s.PairNumber)
+                .Include(s => s.Subject)
+                .Include(s => s.Teacher)
+                .Include(s => s.Group)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (schedulePreference == null)
+            {
+                return NotFound();
+            }
+
             return View(schedulePreference);
         }
 
@@ -171,88 +297,6 @@ namespace ScheduleInfrastructure.Controllers
             return View(schedulePreference);
         }
 
-        // POST: SchedulePreferences/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,TeacherId,SubjectId,DayOfWeekId,PairNumberId,MaxPairsPerDayId,Priority")] SchedulePreference schedulePreference)
-        {
-            if (id != schedulePreference.Id)
-            {
-                return NotFound();
-            }
-            ModelState.Remove("DayOfWeek");
-            ModelState.Remove("MaxPairsPerDay");
-            ModelState.Remove("PairNumber");
-            ModelState.Remove("Subject");
-            ModelState.Remove("Teacher");
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(schedulePreference);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!SchedulePreferenceExists(schedulePreference.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["DayOfWeekId"] = new SelectList(_context.DaysOfWeeks, "Id", "DayName", schedulePreference.DayOfWeekId);
-            ViewData["MaxPairsPerDayId"] = new SelectList(_context.MaxPairsPerDays, "Id", "Id", schedulePreference.MaxPairsPerDayId);
-            ViewData["PairNumberId"] = new SelectList(_context.PairNumbers, "Id", "Description", schedulePreference.PairNumberId);
-            ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Name", schedulePreference.SubjectId);
-            ViewData["TeacherId"] = new SelectList(_context.Users, "Id", "Email", schedulePreference.TeacherId);
-            return View(schedulePreference);
-        }
-
-        // GET: SchedulePreferences/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var schedulePreference = await _context.SchedulePreferences
-                .Include(s => s.DayOfWeek)
-                .Include(s => s.MaxPairsPerDay)
-                .Include(s => s.PairNumber)
-                .Include(s => s.Subject)
-                .Include(s => s.Teacher)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (schedulePreference == null)
-            {
-                return NotFound();
-            }
-
-            return View(schedulePreference);
-        }
-
-        // POST: SchedulePreferences/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var schedulePreference = await _context.SchedulePreferences.FindAsync(id);
-            if (schedulePreference != null)
-            {
-                _context.SchedulePreferences.Remove(schedulePreference);
-            }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
         [HttpPost]
         public async Task<IActionResult> CreateSchedule()
         {
@@ -272,12 +316,14 @@ namespace ScheduleInfrastructure.Controllers
                     .Include(sp => sp.PairNumber)
                     .Include(sp => sp.Subject)
                     .Include(sp => sp.Teacher)
+                    .Include(sp => sp.Group)
                     .Include(sp => sp.MaxPairsPerDay)
                     .Where(sp =>
                         sp.DayOfWeek != null &&
                         sp.PairNumber != null &&
                         sp.Subject != null &&
                         sp.Teacher != null &&
+                        sp.Group != null &&
                         sp.MaxPairsPerDay != null)
                     .OrderBy(sp => sp.Priority)
                     .ToListAsync();
@@ -293,8 +339,9 @@ namespace ScheduleInfrastructure.Controllers
                 _context.FinalSchedules.RemoveRange(_context.FinalSchedules);
 
                 // Tracking to prevent duplicate assignments
-                var assignedSlots = new HashSet<(int DayOfWeekId, int PairNumberId)>();
+                var assignedSlots = new HashSet<(int DayOfWeekId, int PairNumberId, int GroupId)>();
                 var teacherDailyPairs = new Dictionary<(int TeacherId, int DayOfWeekId), int>();
+                var groupDailyPairs = new Dictionary<(int GroupId, int DayOfWeekId), int>();
 
                 var finalSchedules = new List<FinalSchedule>();
 
@@ -303,13 +350,14 @@ namespace ScheduleInfrastructure.Controllers
                     // Null checks before accessing properties
                     if (preference?.DayOfWeek == null ||
                         preference.PairNumber == null ||
-                        preference.MaxPairsPerDay == null)
+                        preference.MaxPairsPerDay == null ||
+                        preference.Group == null)
                     {
                         continue;
                     }
 
-                    // Check if the slot is already taken
-                    var slotKey = (preference.DayOfWeekId, preference.PairNumberId);
+                    // Check if the slot is already taken for this group
+                    var slotKey = (preference.DayOfWeekId, preference.PairNumberId, preference.GroupId);
                     if (assignedSlots.Contains(slotKey))
                         continue;
 
@@ -322,14 +370,24 @@ namespace ScheduleInfrastructure.Controllers
                     if (teacherDailyPairs[teacherDailyKey] >= preference.MaxPairsPerDay.Id)
                         continue;
 
+                    // Check group's daily pairs (assuming max 4 pairs per day for any group)
+                    var groupDailyKey = (preference.GroupId, preference.DayOfWeekId);
+                    if (!groupDailyPairs.ContainsKey(groupDailyKey))
+                        groupDailyPairs[groupDailyKey] = 0;
+
+                    const int MaxGroupPairsPerDay = 4;
+                    if (groupDailyPairs[groupDailyKey] >= MaxGroupPairsPerDay)
+                        continue;
+
                     // Create final schedule entry
                     var finalSchedule = new FinalSchedule
                     {
                         SubjectId = preference.SubjectId,
                         TeacherId = preference.TeacherId,
+                        GroupId = preference.GroupId,
                         DayOfWeekId = preference.DayOfWeekId,
                         PairNumberId = preference.PairNumberId,
-                        IsClassroomAssigned = false 
+                        IsClassroomAssigned = false
                     };
 
                     finalSchedules.Add(finalSchedule);
@@ -338,6 +396,7 @@ namespace ScheduleInfrastructure.Controllers
                     // Mark slot as assigned
                     assignedSlots.Add(slotKey);
                     teacherDailyPairs[teacherDailyKey]++;
+                    groupDailyPairs[groupDailyKey]++;
                 }
 
                 // Save changes

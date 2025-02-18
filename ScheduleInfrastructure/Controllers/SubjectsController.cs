@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -19,11 +15,14 @@ namespace ScheduleInfrastructure.Controllers
         {
             _context = context;
         }
+
         [Authorize]
         // GET: Subjects
         public async Task<IActionResult> Index()
         {
-            var universityPracticeContext = _context.Subjects.Include(s => s.Teacher);
+            var universityPracticeContext = _context.Subjects
+                .Include(s => s.Teacher)
+                .Include(s => s.Group);
             return View(await universityPracticeContext.ToListAsync());
         }
 
@@ -37,6 +36,7 @@ namespace ScheduleInfrastructure.Controllers
 
             var subject = await _context.Subjects
                 .Include(s => s.Teacher)
+                .Include(s => s.Group)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (subject == null)
             {
@@ -50,17 +50,17 @@ namespace ScheduleInfrastructure.Controllers
         public IActionResult Create()
         {
             ViewData["TeacherId"] = new SelectList(_context.Users, "Id", "Email");
+            ViewData["GroupId"] = new SelectList(_context.Set<Group>(), "Id", "GroupName");
             return View();
         }
 
         // POST: Subjects/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,TeacherId,Hours")] Subject subject)
+        public async Task<IActionResult> Create([Bind("Id,Name,TeacherId,GroupId,Hours")] Subject subject)
         {
             ModelState.Remove("Teacher");
+            ModelState.Remove("Group");
 
             if (ModelState.IsValid)
             {
@@ -69,6 +69,7 @@ namespace ScheduleInfrastructure.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["TeacherId"] = new SelectList(_context.Users, "Id", "Email", subject.TeacherId);
+            ViewData["GroupId"] = new SelectList(_context.Set<Group>(), "Id", "GroupName", subject.GroupId);
             return View(subject);
         }
 
@@ -86,15 +87,14 @@ namespace ScheduleInfrastructure.Controllers
                 return NotFound();
             }
             ViewData["TeacherId"] = new SelectList(_context.Users, "Id", "Email", subject.TeacherId);
+            ViewData["GroupId"] = new SelectList(_context.Set<Group>(), "Id", "GroupName", subject.GroupId);
             return View(subject);
         }
 
         // POST: Subjects/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,TeacherId,Hours")] Subject subject)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,TeacherId,GroupId,Hours")] Subject subject)
         {
             if (id != subject.Id)
             {
@@ -102,6 +102,7 @@ namespace ScheduleInfrastructure.Controllers
             }
 
             ModelState.Remove("Teacher");
+            ModelState.Remove("Group");
 
             if (ModelState.IsValid)
             {
@@ -124,6 +125,7 @@ namespace ScheduleInfrastructure.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["TeacherId"] = new SelectList(_context.Users, "Id", "Email", subject.TeacherId);
+            ViewData["GroupId"] = new SelectList(_context.Set<Group>(), "Id", "GroupName", subject.GroupId);
             return View(subject);
         }
 
@@ -137,6 +139,7 @@ namespace ScheduleInfrastructure.Controllers
 
             var subject = await _context.Subjects
                 .Include(s => s.Teacher)
+                .Include(s => s.Group)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (subject == null)
             {
