@@ -8,10 +8,13 @@ public partial class FinalSchedule
 {
     public int Id { get; set; }
 
+    [Display(Name = "Teacher")]
     public int TeacherId { get; set; }
 
+    [Display(Name = "Subject")]
     public int SubjectId { get; set; }
 
+    [Display(Name = "Group")]
     public int GroupId { get; set; }
 
     [Display(Name = "Classroom")]

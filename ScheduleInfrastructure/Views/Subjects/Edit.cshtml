@@ -33,6 +33,11 @@
                 <span asp-validation-for="Hours" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="EducationProgram" class="control-label"></label>
+                <input asp-for="EducationProgram" class="form-control" placeholder="Enter Google Drive link" />
+                <span asp-validation-for="EducationProgram" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" style="margin-top: 5px" />
             </div>
         </form>

@@ -23,6 +23,19 @@ namespace ScheduleInfrastructure.Controllers
         // GET: FinalSchedules
         public async Task<IActionResult> Index(int? groupId)
         {
+            // Get all days and pair numbers for complete grid
+            var allDays = await _context.DaysOfWeeks.OrderBy(d => d.Id).ToListAsync();
+            var allPairs = await _context.PairNumbers.OrderBy(p => p.Id).ToListAsync();
+
+            // Get all groups for the dropdown
+            var groups = await _context.Groups.OrderBy(g => g.GroupName).ToListAsync();
+
+            // If no groupId is provided, redirect to the first group's schedule
+            if (!groupId.HasValue && groups.Any())
+            {
+                return RedirectToAction("Index", new { groupId = groups.First().Id });
+            }
+
             var schedules = await _context.FinalSchedules
                 .Include(f => f.Classroom)
                 .Include(f => f.DayOfWeek)
@@ -30,16 +43,12 @@ namespace ScheduleInfrastructure.Controllers
                 .Include(f => f.Subject)
                 .Include(f => f.Teacher)
                 .Include(f => f.Group)
+                .Where(s => s.GroupId == groupId)
                 .ToListAsync();
 
-            // Filter by group if groupId is provided
-            if (groupId.HasValue)
-            {
-                schedules = schedules.Where(s => s.GroupId == groupId).ToList();
-            }
-
-            // Get all groups for the dropdown
-            ViewBag.Groups = await _context.Groups.OrderBy(g => g.GroupName).ToListAsync();
+            ViewBag.AllDays = allDays;
+            ViewBag.AllPairs = allPairs;
+            ViewBag.Groups = groups;
             ViewBag.SelectedGroupId = groupId;
 
             return View(schedules);
@@ -76,7 +85,7 @@ namespace ScheduleInfrastructure.Controllers
             ViewData["DayOfWeekId"] = new SelectList(_context.DaysOfWeeks, "Id", "DayName");
             ViewData["PairNumberId"] = new SelectList(_context.PairNumbers, "Id", "Description");
             ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Name");
-            ViewData["TeacherId"] = new SelectList(_context.Users, "Id", "Email");
+            ViewData["TeacherId"] = new SelectList(_context.Users, "Id", "FullName");
             ViewData["GroupId"] = new SelectList(_context.Groups, "Id", "GroupName");
             return View();
         }
@@ -137,7 +146,7 @@ namespace ScheduleInfrastructure.Controllers
             ViewData["DayOfWeekId"] = new SelectList(_context.DaysOfWeeks, "Id", "DayName", finalSchedule.DayOfWeekId);
             ViewData["PairNumberId"] = new SelectList(_context.PairNumbers, "Id", "Description", finalSchedule.PairNumberId);
             ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Name", finalSchedule.SubjectId);
-            ViewData["TeacherId"] = new SelectList(_context.Users, "Id", "Email", finalSchedule.TeacherId);
+            ViewData["TeacherId"] = new SelectList(_context.Users, "Id", "FullName", finalSchedule.TeacherId);
             ViewData["GroupId"] = new SelectList(_context.Groups, "Id", "GroupName", finalSchedule.GroupId);
             return View(finalSchedule);
         }

@@ -180,7 +180,18 @@ namespace ScheduleInfrastructure.Controllers
                 return NotFound();
             }
 
-            // Get the subject with its group
+            // Verify the schedule preference exists and belongs to the teacher
+            var originalPreference = await _context.SchedulePreferences
+                .AsNoTracking()
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (originalPreference == null)
+            {
+                return NotFound();
+            }
+
+            schedulePreference.SubjectId = originalPreference.SubjectId;
+
             var subject = await _context.Subjects
                 .Include(s => s.Group)
                 .FirstOrDefaultAsync(s => s.Id == schedulePreference.SubjectId);
@@ -190,7 +201,7 @@ namespace ScheduleInfrastructure.Controllers
                 return NotFound($"Unable to find subject with ID: {schedulePreference.SubjectId}");
             }
 
-            schedulePreference.GroupId = subject.GroupId; // Set the GroupId from the subject
+            schedulePreference.GroupId = subject.GroupId; 
 
             ModelState.Remove("DayOfWeek");
             ModelState.Remove("MaxPairsPerDay");
@@ -220,19 +231,16 @@ namespace ScheduleInfrastructure.Controllers
                 }
             }
 
-            var teacherSubjects = _context.Subjects
-                .Include(s => s.Group)
-                .Where(s => s.TeacherId == schedulePreference.TeacherId)
-                .Select(s => new SelectListItem
-                {
-                    Value = s.Id.ToString(),
-                    Text = $"{s.Name} ({s.Group.GroupName})"
-                });
+            // Get subject name for display in case of validation error
+            ViewBag.SubjectName = subject?.Name;
+            if (subject?.Group != null)
+            {
+                ViewBag.SubjectName += $" ({subject.Group.GroupName})";
+            }
 
             ViewData["DayOfWeekId"] = new SelectList(_context.DaysOfWeeks, "Id", "DayName", schedulePreference.DayOfWeekId);
             ViewData["MaxPairsPerDayId"] = new SelectList(_context.MaxPairsPerDays, "Id", "Id", schedulePreference.MaxPairsPerDayId);
             ViewData["PairNumberId"] = new SelectList(_context.PairNumbers, "Id", "Description", schedulePreference.PairNumberId);
-            ViewData["SubjectId"] = new SelectList(teacherSubjects, "Value", "Text", schedulePreference.SubjectId);
 
             return View(schedulePreference);
         }
@@ -284,16 +292,26 @@ namespace ScheduleInfrastructure.Controllers
                 return NotFound();
             }
 
-            var schedulePreference = await _context.SchedulePreferences.FindAsync(id);
+            var schedulePreference = await _context.SchedulePreferences
+                .Include(s => s.Subject)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
             if (schedulePreference == null)
             {
                 return NotFound();
             }
+
+            // Get subject name for display
+            ViewBag.SubjectName = schedulePreference.Subject?.Name;
+            if (schedulePreference.Subject?.Group != null)
+            {
+                ViewBag.SubjectName += $" ({schedulePreference.Subject.Group.GroupName})";
+            }
+
             ViewData["DayOfWeekId"] = new SelectList(_context.DaysOfWeeks, "Id", "DayName", schedulePreference.DayOfWeekId);
             ViewData["MaxPairsPerDayId"] = new SelectList(_context.MaxPairsPerDays, "Id", "Id", schedulePreference.MaxPairsPerDayId);
             ViewData["PairNumberId"] = new SelectList(_context.PairNumbers, "Id", "Description", schedulePreference.PairNumberId);
-            ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Name", schedulePreference.SubjectId);
-            ViewData["TeacherId"] = new SelectList(_context.Users, "Id", "Email", schedulePreference.TeacherId);
+
             return View(schedulePreference);
         }
 

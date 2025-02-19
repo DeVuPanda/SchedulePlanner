@@ -49,15 +49,16 @@ namespace ScheduleInfrastructure.Controllers
         // GET: Subjects/Create
         public IActionResult Create()
         {
-            ViewData["TeacherId"] = new SelectList(_context.Users, "Id", "Email");
+            ViewData["TeacherId"] = new SelectList(_context.Users, "Id", "FullName");
             ViewData["GroupId"] = new SelectList(_context.Set<Group>(), "Id", "GroupName");
             return View();
         }
 
         // POST: Subjects/Create
+        // POST: Subjects/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,TeacherId,GroupId,Hours")] Subject subject)
+        public async Task<IActionResult> Create([Bind("Id,Name,TeacherId,GroupId,Hours,EducationProgram")] Subject subject)
         {
             ModelState.Remove("Teacher");
             ModelState.Remove("Group");
@@ -86,7 +87,7 @@ namespace ScheduleInfrastructure.Controllers
             {
                 return NotFound();
             }
-            ViewData["TeacherId"] = new SelectList(_context.Users, "Id", "Email", subject.TeacherId);
+            ViewData["TeacherId"] = new SelectList(_context.Users, "Id", "FullName", subject.TeacherId);
             ViewData["GroupId"] = new SelectList(_context.Set<Group>(), "Id", "GroupName", subject.GroupId);
             return View(subject);
         }
@@ -94,7 +95,7 @@ namespace ScheduleInfrastructure.Controllers
         // POST: Subjects/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,TeacherId,GroupId,Hours")] Subject subject)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,TeacherId,GroupId,Hours,EducationProgram")] Subject subject)
         {
             if (id != subject.Id)
             {

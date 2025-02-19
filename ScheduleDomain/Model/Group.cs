@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace ScheduleDomain.Model
 {
     public partial class Group
     {
         public int Id { get; set; }
+        [Display(Name = "Group")]
         public string GroupName { get; set; } = null!;
         public string Course { get; set; } = null!;
         public string Speciality { get; set; } = null!;

@@ -15,6 +15,7 @@ public partial class User
 
     public string Password { get; set; } = null!;
 
+    [Display(Name = "Role")]
     public int RoleId { get; set; }
 
     public virtual ICollection<FinalSchedule> FinalSchedules { get; set; } = new List<FinalSchedule>();

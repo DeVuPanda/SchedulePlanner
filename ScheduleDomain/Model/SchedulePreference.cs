@@ -10,6 +10,7 @@ public partial class SchedulePreference
 
     public int TeacherId { get; set; }
 
+    [Display(Name = "Subject")]
     public int SubjectId { get; set; }
 
     public int GroupId { get; set; }

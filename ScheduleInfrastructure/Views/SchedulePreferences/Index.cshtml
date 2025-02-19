@@ -24,7 +24,13 @@
 
 <div class="row mb-3">
     <div class="col-md-6">
-        <a asp-action="Create" class="btn btn-success">Create New Preference</a>
+        @if (User.Identity.IsAuthenticated)
+        {
+            @if (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value == "Teacher")
+            {
+                <a asp-action="Create" class="btn btn-success">Create New Preference</a>
+            }
+        }
 
         @if (User.Identity.IsAuthenticated)
         {
@@ -47,9 +53,9 @@
     <thead>
         <tr>
             <th>Priority</th>
-            <th>Day of Week</th>
-            <th>Max Pairs Per Day</th>
-            <th>Pair Number</th>
+            <th>Day of week</th>
+            <th>Max pairs per day</th>
+            <th>Pair number</th>
             <th>Subject</th>
             <th>Teacher</th>
             <th>Group</th>
@@ -64,14 +70,20 @@
                 <td>@item.MaxPairsPerDay.Id</td>
                 <td>@item.PairNumber.Description</td>
                 <td>@item.Subject.Name</td>
-                <td>@item.Teacher.Email</td>
+                <td>@item.Teacher.FullName</td>
                 <td>@item.Group.GroupName</td>
                 <td>
-                    <div class="btn-group" role="group">
-                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Edit</a>
-                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info">Details</a>
-                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Delete</a>
-                    </div>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        @if (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value == "Teacher")
+                        {
+                            <div class="btn-group" role="group">
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Edit</a>
+                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info">Details</a>
+                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Delete</a>
+                            </div>
+                        }
+                    }
                 </td>
             </tr>
         }
