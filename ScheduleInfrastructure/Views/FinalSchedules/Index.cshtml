@@ -108,10 +108,14 @@ else
                                 {
                                     <div class="p-2">
                                         <div class="fw-bold">@schedule.Subject.Name</div>
-                                        <div class="text-muted">@schedule.Teacher.Email</div>
+                                        <div class="text-muted">@schedule.Teacher.FullName</div>
                                         @if (schedule.IsClassroomAssigned == true && schedule.Classroom != null)
                                         {
                                             <div class="text-success">Room: @schedule.Classroom.RoomNumber</div>
+                                        }
+                                        else
+                                        {
+                                            <div class="text-danger">Room: not assigned</div>
                                         }
                                         @if (User.Identity.IsAuthenticated && User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value == "Admin")
                                         {
