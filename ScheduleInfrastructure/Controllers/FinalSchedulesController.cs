@@ -273,54 +273,47 @@ namespace ScheduleInfrastructure.Controllers
                 .Include(f => f.Group)
                 .ToListAsync();
 
+
+            var allDays = await _context.Set<DaysOfWeek>().OrderBy(d => d.Id).ToListAsync();
+            var allPairs = await _context.Set<PairNumber>().OrderBy(p => p.Id).ToListAsync();
+
             using (var workbook = new XLWorkbook())
             {
-                // Get all unique groups
                 var groups = schedules.Select(s => s.Group)
-                                    .OrderBy(g => g.GroupName)
-                                    .Distinct()
-                                    .ToList();
+                                .OrderBy(g => g.GroupName)
+                                .Distinct()
+                                .ToList();
 
-                // Create a worksheet for each group
                 foreach (var group in groups)
                 {
                     var groupSchedules = schedules.Where(s => s.GroupId == group.Id).ToList();
                     var worksheet = workbook.Worksheets.Add(group.GroupName);
 
-                    // Get unique days and pair numbers for headers
-                    var days = groupSchedules.Select(s => s.DayOfWeek)
-                                           .OrderBy(d => d.Id)
-                                           .Distinct()
-                                           .ToList();
-                    var pairs = groupSchedules.Select(s => s.PairNumber)
-                                            .OrderBy(p => p.Id)
-                                            .Distinct()
-                                            .ToList();
-
-                    // Add day headers starting from column 2
-                    for (int i = 0; i < days.Count; i++)
+                    for (int i = 0; i < allDays.Count; i++)
                     {
-                        worksheet.Cell(1, i + 2).Value = days[i].DayName;
+                        worksheet.Cell(1, i + 2).Value = allDays[i].DayName;
                     }
 
-                    // Add pair numbers in first column starting from row 2
-                    for (int i = 0; i < pairs.Count; i++)
+                    for (int i = 0; i < allPairs.Count; i++)
                     {
-                        worksheet.Cell(i + 2, 1).Value = pairs[i].Description;
+                        worksheet.Cell(i + 2, 1).Value = allPairs[i].Description;
                     }
 
-                    // Fill the schedule grid
-                    for (int rowIndex = 0; rowIndex < pairs.Count; rowIndex++)
+                    for (int rowIndex = 0; rowIndex < allPairs.Count; rowIndex++)
                     {
-                        for (int colIndex = 0; colIndex < days.Count; colIndex++)
+                        for (int colIndex = 0; colIndex < allDays.Count; colIndex++)
                         {
+                            var currentPairId = allPairs[rowIndex].Id;
+                            var currentDayId = allDays[colIndex].Id;
+
                             var currentSchedule = groupSchedules.FirstOrDefault(s =>
-                                s.DayOfWeek.Id == days[colIndex].Id &&
-                                s.PairNumber.Id == pairs[rowIndex].Id);
+                                s.DayOfWeekId == currentDayId &&
+                                s.PairNumberId == currentPairId);
+
+                            var cell = worksheet.Cell(rowIndex + 2, colIndex + 2);
 
                             if (currentSchedule != null)
                             {
-                                var cell = worksheet.Cell(rowIndex + 2, colIndex + 2);
                                 var cellValue = $"{currentSchedule.Subject.Name}\n{currentSchedule.Teacher.FullName}";
 
                                 if (currentSchedule.IsClassroomAssigned == true && currentSchedule.Classroom != null)
@@ -329,23 +322,25 @@ namespace ScheduleInfrastructure.Controllers
                                 }
 
                                 cell.Value = cellValue;
-                                cell.Style.Alignment.WrapText = true;
                             }
+                            else
+                            {
+                                cell.Value = "";
+                            }
+
+                            cell.Style.Alignment.WrapText = true;
                         }
                     }
 
-                    // Style the worksheet
                     worksheet.Column(1).Style.Font.Bold = true;
                     var headerRow = worksheet.Row(1);
                     headerRow.Style.Font.Bold = true;
                     headerRow.Style.Fill.BackgroundColor = XLColor.LightGray;
 
-                    // Adjust column widths and row heights
                     worksheet.Columns().AdjustToContents();
                     worksheet.Rows().AdjustToContents();
 
-                    // Add borders
-                    var dataRange = worksheet.Range(1, 1, pairs.Count + 1, days.Count + 1);
+                    var dataRange = worksheet.Range(1, 1, allPairs.Count + 1, allDays.Count + 1);
                     dataRange.Style.Border.OutsideBorder = XLBorderStyleValues.Medium;
                     dataRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
                 }
