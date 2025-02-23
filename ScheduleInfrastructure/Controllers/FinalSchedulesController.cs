@@ -90,6 +90,15 @@ namespace ScheduleInfrastructure.Controllers
             return View();
         }
 
+        private bool IsTeacherAvailable(int teacherId, int dayOfWeekId, int pairNumberId, int currentScheduleId)
+        {
+            return !_context.FinalSchedules.Any(fs =>
+                fs.TeacherId == teacherId &&
+                fs.DayOfWeekId == dayOfWeekId &&
+                fs.PairNumberId == pairNumberId &&
+                fs.Id != currentScheduleId);  
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,TeacherId,SubjectId,GroupId,ClassroomId,DayOfWeekId,PairNumberId,IsClassroomAssigned")] FinalSchedule finalSchedule)
@@ -105,18 +114,23 @@ namespace ScheduleInfrastructure.Controllers
 
             if (ModelState.IsValid)
             {
+                if (!IsTeacherAvailable(
+                    finalSchedule.TeacherId,
+                    finalSchedule.DayOfWeekId,
+                    finalSchedule.PairNumberId,
+                     finalSchedule.Id))
+                {
+                    ModelState.AddModelError("TeacherId", "This teacher is already busy on this day on this pair.");
+                    PrepareViewData(finalSchedule);
+                    return View(finalSchedule);
+                }
+
                 _context.Add(finalSchedule);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewData["ClassroomId"] = new SelectList(_context.Classrooms, "Id", "Id", finalSchedule.ClassroomId);
-            ViewData["DayOfWeekId"] = new SelectList(_context.DaysOfWeeks, "Id", "DayName", finalSchedule.DayOfWeekId);
-            ViewData["PairNumberId"] = new SelectList(_context.PairNumbers, "Id", "Description", finalSchedule.PairNumberId);
-            ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Name", finalSchedule.SubjectId);
-            ViewData["TeacherId"] = new SelectList(_context.Users, "Id", "Email", finalSchedule.TeacherId);
-            ViewData["GroupId"] = new SelectList(_context.Groups, "Id", "Name", finalSchedule.GroupId);
-
+            PrepareViewData(finalSchedule);
             return View(finalSchedule);
         }
 
@@ -151,7 +165,35 @@ namespace ScheduleInfrastructure.Controllers
             return View(finalSchedule);
         }
 
-        // POST: FinalSchedules/Edit/5
+        private bool IsClassroomAvailable(int classroomId, int dayOfWeekId, int pairNumberId, int currentScheduleId)
+        {
+            return !_context.FinalSchedules.Any(fs =>
+                fs.ClassroomId == classroomId &&
+                fs.DayOfWeekId == dayOfWeekId &&
+                fs.PairNumberId == pairNumberId &&
+                fs.Id != currentScheduleId); 
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAvailableClassrooms(int dayOfWeekId, int pairNumberId, int currentScheduleId)
+        {
+            var busyClassroomIds = await _context.FinalSchedules
+                .Where(fs => fs.DayOfWeekId == dayOfWeekId &&
+                            fs.PairNumberId == pairNumberId &&
+                            fs.Id != currentScheduleId &&
+                            fs.ClassroomId != null)
+                .Select(fs => fs.ClassroomId.Value)
+                .ToListAsync();
+
+            var availableClassrooms = await _context.Classrooms
+                .Where(c => !busyClassroomIds.Contains(c.Id))
+                .Select(c => new { c.RoomNumber })
+                .OrderBy(c => c.RoomNumber)
+                .ToListAsync();
+
+            return Json(availableClassrooms);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,TeacherId,SubjectId,GroupId,ClassroomId,DayOfWeekId,PairNumberId,IsClassroomAssigned")] FinalSchedule finalSchedule)
@@ -160,7 +202,6 @@ namespace ScheduleInfrastructure.Controllers
             {
                 return NotFound();
             }
-
             ModelState.Remove("Classroom");
             ModelState.Remove("DayOfWeek");
             ModelState.Remove("PairNumber");
@@ -170,13 +211,36 @@ namespace ScheduleInfrastructure.Controllers
 
             if (ModelState.IsValid)
             {
+                // Check teacher availability
+                if (!IsTeacherAvailable(
+                    finalSchedule.TeacherId,
+                    finalSchedule.DayOfWeekId,
+                    finalSchedule.PairNumberId,
+                    finalSchedule.Id))
+                {
+                    ModelState.AddModelError("TeacherId", "This teacher is already busy on this day on this pair.");
+                    PrepareViewData(finalSchedule);
+                    return View(finalSchedule);
+                }
+
+                // Check classroom availability
+                if (finalSchedule.ClassroomId != null)
+                {
+                    if (!IsClassroomAvailable(
+                        finalSchedule.ClassroomId.Value,
+                        finalSchedule.DayOfWeekId,
+                        finalSchedule.PairNumberId,
+                        finalSchedule.Id))
+                    {
+                        ModelState.AddModelError("ClassroomId", "This classroom is already busy on this day on this pair.");
+                        PrepareViewData(finalSchedule);
+                        return View(finalSchedule);
+                    }
+                    finalSchedule.IsClassroomAssigned = true;
+                }
+
                 try
                 {
-                    if (finalSchedule.ClassroomId != null)
-                    {
-                        finalSchedule.IsClassroomAssigned = true;
-                    }
-
                     _context.Update(finalSchedule);
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
@@ -193,14 +257,18 @@ namespace ScheduleInfrastructure.Controllers
                     }
                 }
             }
+            PrepareViewData(finalSchedule);
+            return View(finalSchedule);
+        }
 
+        private void PrepareViewData(FinalSchedule finalSchedule)
+        {
             ViewData["ClassroomId"] = new SelectList(_context.Classrooms, "Id", "RoomNumber", finalSchedule.ClassroomId);
             ViewData["DayOfWeekId"] = new SelectList(_context.DaysOfWeeks, "Id", "DayName", finalSchedule.DayOfWeekId);
             ViewData["PairNumberId"] = new SelectList(_context.PairNumbers, "Id", "Description", finalSchedule.PairNumberId);
             ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Name", finalSchedule.SubjectId);
             ViewData["TeacherId"] = new SelectList(_context.Users, "Id", "Email", finalSchedule.TeacherId);
             ViewData["GroupId"] = new SelectList(_context.Groups, "Id", "GroupName", finalSchedule.GroupId);
-            return View(finalSchedule);
         }
 
         // GET: FinalSchedules/Delete/5

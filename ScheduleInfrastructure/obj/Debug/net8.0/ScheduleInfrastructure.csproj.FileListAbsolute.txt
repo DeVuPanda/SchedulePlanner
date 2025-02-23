@@ -270,3 +270,4 @@ C:\Projects\univ_practice\src\SchedulePlanner\ScheduleInfrastructure\bin\Debug\n
 C:\Projects\univ_practice\src\SchedulePlanner\ScheduleInfrastructure\bin\Debug\net8.0\RBush.dll
 C:\Projects\univ_practice\src\SchedulePlanner\ScheduleInfrastructure\bin\Debug\net8.0\SixLabors.Fonts.dll
 C:\Projects\univ_practice\src\SchedulePlanner\ScheduleInfrastructure\bin\Debug\net8.0\System.IO.Packaging.dll
+C:\Projects\univ_practice\src\SchedulePlanner\ScheduleInfrastructure\obj\Debug\net8.0\ScheduleInfrastructure.sourcelink.json
