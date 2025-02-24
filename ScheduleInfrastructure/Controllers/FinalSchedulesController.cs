@@ -118,9 +118,20 @@ namespace ScheduleInfrastructure.Controllers
                     finalSchedule.TeacherId,
                     finalSchedule.DayOfWeekId,
                     finalSchedule.PairNumberId,
-                     finalSchedule.Id))
+                    finalSchedule.Id))
                 {
                     ModelState.AddModelError("TeacherId", "This teacher is already busy on this day on this pair.");
+                    PrepareViewData(finalSchedule);
+                    return View(finalSchedule);
+                }
+
+                if (!IsGroupAvailable(
+                    finalSchedule.GroupId,
+                    finalSchedule.DayOfWeekId,
+                    finalSchedule.PairNumberId,
+                    finalSchedule.Id))
+                {
+                    ModelState.AddModelError("GroupId", "This group already has a class scheduled on this day at this time.");
                     PrepareViewData(finalSchedule);
                     return View(finalSchedule);
                 }
@@ -132,6 +143,15 @@ namespace ScheduleInfrastructure.Controllers
 
             PrepareViewData(finalSchedule);
             return View(finalSchedule);
+        }
+
+        private bool IsGroupAvailable(int groupId, int dayOfWeekId, int pairNumberId, int currentScheduleId)
+        {
+            return !_context.FinalSchedules.Any(fs =>
+                fs.GroupId == groupId &&
+                fs.DayOfWeekId == dayOfWeekId &&
+                fs.PairNumberId == pairNumberId &&
+                fs.Id != currentScheduleId);
         }
 
         // GET: FinalSchedules/Edit/5
