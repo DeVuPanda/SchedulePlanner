@@ -11,3 +11,4 @@ C:\Projects\univ_practice\src\SchedulePlanner\ScheduleDomain\obj\Debug\net8.0\Sc
 C:\Projects\univ_practice\src\SchedulePlanner\ScheduleDomain\obj\Debug\net8.0\ref\ScheduleDomain.dll
 C:\Projects\univ_practice\src\SchedulePlanner\ScheduleDomain\bin\Debug\net8.0\ScheduleDomain.runtimeconfig.json
 C:\Projects\univ_practice\src\SchedulePlanner\ScheduleDomain\obj\Debug\net8.0\ScheduleDomain.genruntimeconfig.cache
+C:\Projects\univ_practice\src\SchedulePlanner\ScheduleDomain\obj\Debug\net8.0\ScheduleDomain.sourcelink.json

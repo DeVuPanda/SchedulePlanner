@@ -34,9 +34,11 @@ public partial class UniversityPracticeContext : DbContext
 
     public virtual DbSet<UserRole> UserRoles { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=Denis\\SQLEXPRESS; Database=UniversityPractice; Trusted_Connection=True; TrustServerCertificate=True; ");
+    public virtual DbSet<Group> Groups { get; set; }
+
+//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+//        => optionsBuilder.UseSqlServer("Server=Denis\\SQLEXPRESS; Database=UniversityPractice; Trusted_Connection=True; TrustServerCertificate=True; ");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -199,10 +201,43 @@ public partial class UniversityPracticeContext : DbContext
                 .IsUnicode(false);
         });
 
+        //modelBuilder.Entity<Group>(entity =>
+        //{
+        //    entity.HasKey(e => e.Id).HasName("PK__Group__3214EC07XXXXXXX");
+
+        //    entity.HasIndex(e => e.GroupName, "UQ__Group__XXXXXXX").IsUnique();
+
+        //    entity.Property(e => e.GroupName)
+        //        .HasMaxLength(100)
+        //        .IsUnicode(false);
+
+        //    entity.Property(e => e.Course)
+        //        .HasMaxLength(100)
+        //        .IsUnicode(false);
+
+        //    entity.Property(e => e.Speciality)
+        //        .HasMaxLength(100)
+        //        .IsUnicode(false);
+
+        //    entity.HasMany(g => g.Subjects)
+        //        .WithOne()
+        //        .HasForeignKey("GroupId")
+        //        .OnDelete(DeleteBehavior.ClientSetNull);
+
+        //    entity.HasMany(g => g.SchedulePreferences)
+        //        .WithOne()
+        //        .HasForeignKey("GroupId")
+        //        .OnDelete(DeleteBehavior.ClientSetNull);
+
+        //    entity.HasMany(g => g.FinalSchedules)
+        //        .WithOne()
+        //        .HasForeignKey("GroupId")
+        //        .OnDelete(DeleteBehavior.ClientSetNull);
+        //});
+
+
         OnModelCreatingPartial(modelBuilder);
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
-
-public DbSet<ScheduleDomain.Model.Group> Groups { get; set; } = default!;
 }
