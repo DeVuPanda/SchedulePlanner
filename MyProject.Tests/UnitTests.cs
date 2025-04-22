@@ -123,13 +123,13 @@ namespace MyProject.Tests
 
             var subject1 = new Subject
             {
-                Name = "Mathematics",
+                Name = "SystemProgramming",
                 TeacherId = teacher1.Id
             };
 
             var subject2 = new Subject
             {
-                Name = "Physics",
+                Name = "Algorithmics",
                 TeacherId = teacher2.Id
             };
 

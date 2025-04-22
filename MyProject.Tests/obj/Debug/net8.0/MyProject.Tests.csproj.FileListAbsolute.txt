@@ -345,3 +345,5 @@ C:\Projects\univ_practice\src\SchedulePlanner\MyProject.Tests\obj\Debug\net8.0\r
 C:\Projects\univ_practice\src\SchedulePlanner\MyProject.Tests\obj\Debug\net8.0\MyProject.Tests.pdb
 C:\Projects\univ_practice\src\SchedulePlanner\MyProject.Tests\obj\Debug\net8.0\MyProject.Tests.genruntimeconfig.cache
 C:\Projects\univ_practice\src\SchedulePlanner\MyProject.Tests\obj\Debug\net8.0\ref\MyProject.Tests.dll
+C:\Projects\univ_practice\src\SchedulePlanner\MyProject.Tests\bin\Debug\net8.0\Castle.Core.dll
+C:\Projects\univ_practice\src\SchedulePlanner\MyProject.Tests\bin\Debug\net8.0\Moq.dll

@@ -3,16 +3,32 @@
   "WorkspaceRootPath": "C:\\Projects\\univ_practice\\src\\SchedulePlanner\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{0260A97F-7EF8-4A7C-A40F-48216B3C3D0A}|ScheduleInfrastructure\\ScheduleInfrastructure.csproj|c:\\projects\\univ_practice\\src\\scheduleplanner\\scheduleinfrastructure\\universitypracticecontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{0260A97F-7EF8-4A7C-A40F-48216B3C3D0A}|ScheduleInfrastructure\\ScheduleInfrastructure.csproj|solutionrelative:scheduleinfrastructure\\universitypracticecontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{D90FDCA7-C220-4C00-A989-185E6315A9A3}|MyProject.Tests\\MyProject.Tests.csproj|c:\\projects\\univ_practice\\src\\scheduleplanner\\myproject.tests\\userservicemocktests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D90FDCA7-C220-4C00-A989-185E6315A9A3}|MyProject.Tests\\MyProject.Tests.csproj|solutionrelative:myproject.tests\\userservicemocktests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D90FDCA7-C220-4C00-A989-185E6315A9A3}|MyProject.Tests\\MyProject.Tests.csproj|c:\\projects\\univ_practice\\src\\scheduleplanner\\myproject.tests\\mockedtests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D90FDCA7-C220-4C00-A989-185E6315A9A3}|MyProject.Tests\\MyProject.Tests.csproj|solutionrelative:myproject.tests\\mockedtests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{D90FDCA7-C220-4C00-A989-185E6315A9A3}|MyProject.Tests\\MyProject.Tests.csproj|c:\\projects\\univ_practice\\src\\scheduleplanner\\myproject.tests\\finalscheduleservicemocktests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D90FDCA7-C220-4C00-A989-185E6315A9A3}|MyProject.Tests\\MyProject.Tests.csproj|solutionrelative:myproject.tests\\finalscheduleservicemocktests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D90FDCA7-C220-4C00-A989-185E6315A9A3}|MyProject.Tests\\MyProject.Tests.csproj|c:\\projects\\univ_practice\\src\\scheduleplanner\\myproject.tests\\unittests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D90FDCA7-C220-4C00-A989-185E6315A9A3}|MyProject.Tests\\MyProject.Tests.csproj|solutionrelative:myproject.tests\\unittests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{0260A97F-7EF8-4A7C-A40F-48216B3C3D0A}|ScheduleInfrastructure\\ScheduleInfrastructure.csproj|c:\\projects\\univ_practice\\src\\scheduleplanner\\scheduleinfrastructure\\services\\finalscheduleservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0260A97F-7EF8-4A7C-A40F-48216B3C3D0A}|ScheduleInfrastructure\\ScheduleInfrastructure.csproj|solutionrelative:scheduleinfrastructure\\services\\finalscheduleservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0260A97F-7EF8-4A7C-A40F-48216B3C3D0A}|ScheduleInfrastructure\\ScheduleInfrastructure.csproj|c:\\projects\\univ_practice\\src\\scheduleplanner\\scheduleinfrastructure\\services\\ifinalscheduleservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0260A97F-7EF8-4A7C-A40F-48216B3C3D0A}|ScheduleInfrastructure\\ScheduleInfrastructure.csproj|solutionrelative:scheduleinfrastructure\\services\\ifinalscheduleservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0260A97F-7EF8-4A7C-A40F-48216B3C3D0A}|ScheduleInfrastructure\\ScheduleInfrastructure.csproj|c:\\projects\\univ_practice\\src\\scheduleplanner\\scheduleinfrastructure\\services\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0260A97F-7EF8-4A7C-A40F-48216B3C3D0A}|ScheduleInfrastructure\\ScheduleInfrastructure.csproj|solutionrelative:scheduleinfrastructure\\services\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0260A97F-7EF8-4A7C-A40F-48216B3C3D0A}|ScheduleInfrastructure\\ScheduleInfrastructure.csproj|c:\\projects\\univ_practice\\src\\scheduleplanner\\scheduleinfrastructure\\services\\iuserservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0260A97F-7EF8-4A7C-A40F-48216B3C3D0A}|ScheduleInfrastructure\\ScheduleInfrastructure.csproj|solutionrelative:scheduleinfrastructure\\services\\iuserservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0260A97F-7EF8-4A7C-A40F-48216B3C3D0A}|ScheduleInfrastructure\\ScheduleInfrastructure.csproj|c:\\projects\\univ_practice\\src\\scheduleplanner\\scheduleinfrastructure\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0260A97F-7EF8-4A7C-A40F-48216B3C3D0A}|ScheduleInfrastructure\\ScheduleInfrastructure.csproj|solutionrelative:scheduleinfrastructure\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -21,8 +37,8 @@
       "VerticalTabListWidth": 256,
       "DocumentGroups": [
         {
-          "DockedWidth": 200,
-          "SelectedChildIndex": -1,
+          "DockedWidth": 230,
+          "SelectedChildIndex": 6,
           "Children": [
             {
               "$type": "Bookmark",
@@ -31,56 +47,111 @@
             {
               "$type": "Bookmark",
               "Name": "ST:9:0:{e8034f19-ab72-4f06-83fd-f6832b41aa63}"
-            }
-          ]
-        },
-        {
-          "DockedWidth": 200,
-          "SelectedChildIndex": 3,
-          "Children": [
+            },
             {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "UnitTests.cs",
-              "DocumentMoniker": "C:\\Projects\\univ_practice\\src\\SchedulePlanner\\MyProject.Tests\\UnitTests.cs",
-              "RelativeDocumentMoniker": "MyProject.Tests\\UnitTests.cs",
-              "ToolTip": "C:\\Projects\\univ_practice\\src\\SchedulePlanner\\MyProject.Tests\\UnitTests.cs",
-              "RelativeToolTip": "MyProject.Tests\\UnitTests.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAoAAAABAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-08T11:11:57.8Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "$type": "Bookmark",
+              "Name": "ST:1:0:{e8034f19-ab72-4f06-83fd-f6832b41aa63}"
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "MockedTests.cs",
-              "DocumentMoniker": "C:\\Projects\\univ_practice\\src\\SchedulePlanner\\MyProject.Tests\\MockedTests.cs",
-              "RelativeDocumentMoniker": "MyProject.Tests\\MockedTests.cs",
-              "ToolTip": "C:\\Projects\\univ_practice\\src\\SchedulePlanner\\MyProject.Tests\\MockedTests.cs",
-              "RelativeToolTip": "MyProject.Tests\\MockedTests.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAAAAAAA",
+              "Title": "FinalScheduleServiceMockTests.cs",
+              "DocumentMoniker": "C:\\Projects\\univ_practice\\src\\SchedulePlanner\\MyProject.Tests\\FinalScheduleServiceMockTests.cs",
+              "RelativeDocumentMoniker": "MyProject.Tests\\FinalScheduleServiceMockTests.cs",
+              "ToolTip": "C:\\Projects\\univ_practice\\src\\SchedulePlanner\\MyProject.Tests\\FinalScheduleServiceMockTests.cs",
+              "RelativeToolTip": "MyProject.Tests\\FinalScheduleServiceMockTests.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAEAAAAAeAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-20T10:13:32.885Z",
+              "WhenOpened": "2025-04-22T14:38:54.443Z",
               "EditorCaption": ""
             },
             {
-              "$type": "Bookmark",
-              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "FinalScheduleService.cs",
+              "DocumentMoniker": "C:\\Projects\\univ_practice\\src\\SchedulePlanner\\ScheduleInfrastructure\\Services\\FinalScheduleService.cs",
+              "RelativeDocumentMoniker": "ScheduleInfrastructure\\Services\\FinalScheduleService.cs",
+              "ToolTip": "C:\\Projects\\univ_practice\\src\\SchedulePlanner\\ScheduleInfrastructure\\Services\\FinalScheduleService.cs",
+              "RelativeToolTip": "ScheduleInfrastructure\\Services\\FinalScheduleService.cs",
+              "ViewState": "AQIAABoAAAAAAAAAAAAgwBQAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-22T14:37:14.324Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "IFinalScheduleService.cs",
+              "DocumentMoniker": "C:\\Projects\\univ_practice\\src\\SchedulePlanner\\ScheduleInfrastructure\\Services\\IFinalScheduleService.cs",
+              "RelativeDocumentMoniker": "ScheduleInfrastructure\\Services\\IFinalScheduleService.cs",
+              "ToolTip": "C:\\Projects\\univ_practice\\src\\SchedulePlanner\\ScheduleInfrastructure\\Services\\IFinalScheduleService.cs",
+              "RelativeToolTip": "ScheduleInfrastructure\\Services\\IFinalScheduleService.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-22T14:36:33.363Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "UniversityPracticeContext.cs",
-              "DocumentMoniker": "C:\\Projects\\univ_practice\\src\\SchedulePlanner\\ScheduleInfrastructure\\UniversityPracticeContext.cs",
-              "RelativeDocumentMoniker": "ScheduleInfrastructure\\UniversityPracticeContext.cs",
-              "ToolTip": "C:\\Projects\\univ_practice\\src\\SchedulePlanner\\ScheduleInfrastructure\\UniversityPracticeContext.cs",
-              "RelativeToolTip": "ScheduleInfrastructure\\UniversityPracticeContext.cs",
-              "ViewState": "AQIAABsAAAAAAAAAAAAiwCIAAAA6AAAA",
+              "Title": "UserServiceMockTests.cs",
+              "DocumentMoniker": "C:\\Projects\\univ_practice\\src\\SchedulePlanner\\MyProject.Tests\\UserServiceMockTests.cs",
+              "RelativeDocumentMoniker": "MyProject.Tests\\UserServiceMockTests.cs",
+              "ToolTip": "C:\\Projects\\univ_practice\\src\\SchedulePlanner\\MyProject.Tests\\UserServiceMockTests.cs",
+              "RelativeToolTip": "MyProject.Tests\\UserServiceMockTests.cs",
+              "ViewState": "AQIAADcAAAAAAAAAAAAkwBwAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-08T11:14:33.97Z",
+              "WhenOpened": "2025-04-22T14:33:28.332Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "UserService.cs",
+              "DocumentMoniker": "C:\\Projects\\univ_practice\\src\\SchedulePlanner\\ScheduleInfrastructure\\Services\\UserService.cs",
+              "RelativeDocumentMoniker": "ScheduleInfrastructure\\Services\\UserService.cs",
+              "ToolTip": "C:\\Projects\\univ_practice\\src\\SchedulePlanner\\ScheduleInfrastructure\\Services\\UserService.cs",
+              "RelativeToolTip": "ScheduleInfrastructure\\Services\\UserService.cs",
+              "ViewState": "AQIAACQAAAAAAAAAAAAowAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-22T14:32:19.624Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "IUserService.cs",
+              "DocumentMoniker": "C:\\Projects\\univ_practice\\src\\SchedulePlanner\\ScheduleInfrastructure\\Services\\IUserService.cs",
+              "RelativeDocumentMoniker": "ScheduleInfrastructure\\Services\\IUserService.cs",
+              "ToolTip": "C:\\Projects\\univ_practice\\src\\SchedulePlanner\\ScheduleInfrastructure\\Services\\IUserService.cs",
+              "RelativeToolTip": "ScheduleInfrastructure\\Services\\IUserService.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-22T14:31:40.884Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Projects\\univ_practice\\src\\SchedulePlanner\\ScheduleInfrastructure\\Program.cs",
+              "RelativeDocumentMoniker": "ScheduleInfrastructure\\Program.cs",
+              "ToolTip": "C:\\Projects\\univ_practice\\src\\SchedulePlanner\\ScheduleInfrastructure\\Program.cs",
+              "RelativeToolTip": "ScheduleInfrastructure\\Program.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-22T14:30:13.09Z",
+              "EditorCaption": ""
+            }
+          ]
+        },
+        {
+          "DockedWidth": 170,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
             }
           ]
         }

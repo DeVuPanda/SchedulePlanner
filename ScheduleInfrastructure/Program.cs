@@ -2,11 +2,14 @@ using ScheduleInfrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
+using ScheduleInfrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IFinalScheduleService, FinalScheduleService>();
 
 builder.Services.AddDbContext<UniversityPracticeContext>(option => option.UseSqlServer(
     builder.Configuration.GetConnectionString("DefaultConnection")
